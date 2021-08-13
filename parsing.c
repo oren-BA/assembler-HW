@@ -51,8 +51,12 @@ char** splitLine(char* sourceCode, int wordNum){
 }
 
 bool isCommandWord(char* word){
-    char* commandWords[] = {"add", "sub"}; //TODO add all commands
-    for (int i = 0; i < 2; ++i) { //TODO add correct num
+    char* commandWords[] = {"add", "sub", "and", "or", "nor", "move", "mhvi", "mvlo",
+                            "addi", "subi", "andi", "ori", "nori", "bne", "beq", "blt",
+                            "bgt", "lb", "sb", "lw", "sw", "lh", "sh", "jmp", "la", "call",
+                             "stop"};
+
+    for (int i = 0; i < 27; ++i) {
         if (strcmp(word, commandWords[i]) == 0){
             return true;
         }
