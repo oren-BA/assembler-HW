@@ -1,16 +1,18 @@
-//
-// Created by orenb on 13/08/2021.
-//
-
 #ifndef ASSEMBLER_HW_TOKEN_H
 #define ASSEMBLER_HW_TOKEN_H
+
+#include <malloc.h>
+#include <string.h>
+#include <stdbool.h>
+#include "BinaryCommand.h"
+
 enum TokenType{
-    LabelDefinition, //
+    LabelDefinition,
     Label,
     Command,
     Register,
     Number,
-    String,
+    String
 };
 
 typedef struct Token Token;
@@ -18,4 +20,11 @@ struct Token{
     enum TokenType type;
     char* content;
 } ;
-#endif //ASSEMBLER_HW_TOKEN_H
+
+Token wordToToken(char*);
+
+int isNumber(const char* word);
+
+
+
+#endif /* ASSEMBLER_HW_TOKEN_H */
