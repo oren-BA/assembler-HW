@@ -2,7 +2,6 @@
 #include <malloc.h>
 #include <memory.h>
 #include "Token.h"
-#include "BinaryCommand.h"
 #include "LineOfCode.h"
 
 char** splitLine(char* sourceCode, int wordNum){
