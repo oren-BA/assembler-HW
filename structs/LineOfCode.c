@@ -58,8 +58,8 @@ int tokenCount(const char* sourceCode){
 
 BinaryCommand tokensToBinary(Token* tokens){
     /* TODO  implement*/
-    BinaryCommand b;
-    return b;
+    BinaryCommand* b = (BinaryCommand*)malloc(1);
+    return *b;
 }
 
 LineOfCode* createLine(char* sourceCode, int address){

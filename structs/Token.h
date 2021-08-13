@@ -23,7 +23,7 @@ struct Token{
 
 Token wordToToken(char*);
 
-bool isNumber(const char* word);
+int isNumber(const char* word);
 
 
 

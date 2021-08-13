@@ -5,13 +5,14 @@
 
 
 bool isString(char* word){ /*TODO check .asciz definition*/
+    int i;
     if (word[0] != '"'){
         return false;
     }
     if (word[strlen(word)-1] != '"'){
         return false;
     }
-    int i;
+
     for (i = 1; i < strlen(word) - 1; ++i) {
         if (word[i] == '"'){
             return false;
@@ -33,6 +34,11 @@ bool isCommandWord(char* word){
         }
     }
     return false;
+}
+
+int isNumber(const char* word){
+    /*TODO*/
+     return 1;
 }
 
 Token wordToToken(char* word){

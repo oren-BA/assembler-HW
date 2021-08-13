@@ -2,6 +2,7 @@
 #define ASSEMBLER_HW_LINEOFCODE_H
 
 #include "BinaryCommand.h"
+#include "Token.h"
 
 typedef struct LineOfCode LineOfCode;
 struct LineOfCode {
@@ -11,6 +12,8 @@ struct LineOfCode {
     struct Token * tokens;
     int tokens_num;
 };
+
+Token* tokenize(char* sourceCode, int tokenNum);
 
 char** splitLine(char* sourceCode, int wordNum);
 #endif /* ASSEMBLER_HW_LINEOFCODE_H */
