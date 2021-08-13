@@ -4,13 +4,11 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
+#include <stdbool.h>
 
 #include "structs/BinaryCommand.h"
 #include "structs/Token.h"
 #include "structs/LineOfCode.h"
-
-#define TRUE 1
-#define FALSE 0
 
 int tokenCount(const char* sourceCode){
     int i = 0;
@@ -51,43 +49,43 @@ char** splitLine(char* sourceCode, int wordNum){
     return words;
 }
 
-int isCommandWord(char* word){
+bool isCommandWord(char* word){
     char* commandWords[] = {"add", "sub"}; //TODO add all commands
     for (int i = 0; i < 2; ++i) { //TODO add correct num
         if (strcmp(word, commandWords[i]) == 0){
-            return TRUE;
+            return true;
         }
     }
-    return FALSE;
+    return false;
 }
 
-int isNumber(const char* word){
+bool isNumber(const char* word){
     int i = 0;
     if (word[0] == '-'){
         i++;
     }
     while (word[i] != '\0'){
         if(word[i] < '0' || word[i] > '9'){
-            return FALSE;
+            return false;
         }
         i++;
     }
-    return TRUE;
+    return true;
 }
 
-int isString(char* word){ //TODO check .asciz definition
+bool isString(char* word){ //TODO check .asciz definition
     if (word[0] != '"'){
-        return FALSE;
+        return false;
     }
     if (word[strlen(word)-1] != '"'){
-        return FALSE;
+        return false;
     }
     for (int i = 1; i < strlen(word) - 1; ++i) {
         if (word[i] == '"'){
-            return FALSE;
+            return false;
         }
     }
-    return TRUE;
+    return true;
 }
 
 Token wordToToken(char* word){
@@ -120,6 +118,7 @@ Token * tokenize(char* sourceCode){
 
 
 BinaryCommand tokensToBinary(Token* tokens){
+    //TODO implement
     BinaryCommand b;
     return b;
 }
@@ -133,6 +132,9 @@ struct LineOfCode parseLine(char* sourceCode, int address){
     return l;
 }
 
+LineOfCode* parseFile(char* filename) {
+    //TODO
+}
 
 int main(int argc, char* argv[]){
     char *sourceCode = "MAIN: add $3,$5,$9\n";
