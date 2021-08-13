@@ -4,24 +4,28 @@
 #include "Token.h"
 
 
-bool isString(char* word){ /*TODO check .asciz definition*/
+#define TRUE 1
+#define FALSE 0
+
+
+int isString(char* word){ /*TODO check .asciz definition*/
     int i;
     if (word[0] != '"'){
-        return false;
+        return FALSE;
     }
     if (word[strlen(word)-1] != '"'){
-        return false;
+        return FALSE;
     }
 
     for (i = 1; i < strlen(word) - 1; ++i) {
         if (word[i] == '"'){
-            return false;
+            return FALSE;
         }
     }
-    return true;
+    return TRUE;
 }
 
-bool isCommandWord(char* word){
+int isCommandWord(char* word){
     char* commandWords[] = {"add", "sub", "and", "or", "nor", "move", "mhvi", "mvlo",
                             "addi", "subi", "andi", "ori", "nori", "bne", "beq", "blt",
                             "bgt", "lb", "sb", "lw", "sw", "lh", "sh", "jmp", "la", "call",
@@ -30,16 +34,27 @@ bool isCommandWord(char* word){
     int i;
     for (i = 0; i < 27; ++i) {
         if (strcmp(word, commandWords[i]) == 0){
-            return true;
+            return TRUE;
         }
     }
-    return false;
+    return FALSE;
 }
 
 int isNumber(const char* word){
-    /*TODO*/
-     return 1;
+    int i = 0;
+    if (word[0] == '-'){
+        i++;
+    }
+    while (word[i] != '\0'){
+        if(word[i] < '0' || word[i] > '9'){
+            return FALSE;
+        }
+        i++;
+    }
+    return TRUE;
 }
+
+
 
 Token wordToToken(char* word){
     Token t;

@@ -15,5 +15,8 @@ struct LineOfCode {
 
 Token* tokenize(char* sourceCode, int tokenNum);
 
+int isNumber(const char* word);
+
+
 char** splitLine(char* sourceCode, int wordNum);
 #endif /* ASSEMBLER_HW_LINEOFCODE_H */
