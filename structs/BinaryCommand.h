@@ -13,4 +13,6 @@ struct  BinaryCommand{
     enum CommandType type;
 } ;
 
+BinaryCommand *createCommand(enum CommandType);
+
 #endif //ASSEMBLER_HW_BINARYCOMMAND_H

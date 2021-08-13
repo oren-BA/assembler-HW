@@ -118,9 +118,9 @@ Token * tokenize(char* sourceCode){
 }
 
 
-BinaryCommand tokensToBinary(Token* tokens){
+BinaryCommand* tokensToBinary(Token* tokens){
     //TODO implement
-    BinaryCommand b;
+    BinaryCommand* b = createCommand(I);
     return b;
 }
 
