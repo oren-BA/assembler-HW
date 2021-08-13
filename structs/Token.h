@@ -4,7 +4,14 @@
 
 #ifndef ASSEMBLER_HW_TOKEN_H
 #define ASSEMBLER_HW_TOKEN_H
-enum TokenType{Label, Command, Register, Constant};
+enum TokenType{
+    LabelDefinition, //
+    Label,
+    Command,
+    Register,
+    Number,
+    String,
+};
 
 typedef struct Token Token;
 struct Token{
