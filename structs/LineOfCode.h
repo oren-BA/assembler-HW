@@ -13,5 +13,6 @@ struct LineOfCode {
     BinaryCommand binaryCommand;
     int address;
     struct Token * tokens;
+    int numOfTokens;
 };
 #endif //ASSEMBLER_HW_LINEOFCODE_H

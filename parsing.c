@@ -111,8 +111,7 @@ Token wordToToken(char* word){
     return t;
 }
 
-Token * tokenize(char* sourceCode){
-    int tokenNum = tokenCount(sourceCode);
+Token * tokenize(char* sourceCode, int tokenNum){
     char** words = splitLine(sourceCode, tokenNum);
     Token* tokens = (Token*)malloc(sizeof(Token)*tokenNum);
     for (int i = 0; i < tokenNum; ++i) {
@@ -131,7 +130,9 @@ BinaryCommand tokensToBinary(Token* tokens){
 struct LineOfCode parseLine(char* sourceCode, int address){
     LineOfCode l;
     l.source = sourceCode;
-    l.tokens = tokenize(sourceCode);
+    l.numOfTokens = tokenCount(sourceCode);
+    l.tokens = tokenize(sourceCode, l.numOfTokens);
+    int count = 0;
     l.address = address;
     l.binaryCommand = tokensToBinary(l.tokens);
     return l;
@@ -148,7 +149,7 @@ bool validate_line(LineOfCode line){
 int main(int argc, char* argv[]){
     char *sourceCode = "MAIN: add $3,$5,$9\n";
     char** words = splitLine(sourceCode, 5);
-    Token* tokens = tokenize(sourceCode);
+    Token* tokens = tokenize(sourceCode, 5);
 }
 
 
