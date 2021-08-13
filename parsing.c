@@ -55,7 +55,7 @@ bool isCommandWord(char* word){
                             "addi", "subi", "andi", "ori", "nori", "bne", "beq", "blt",
                             "bgt", "lb", "sb", "lw", "sw", "lh", "sh", "jmp", "la", "call",
                              "stop"};
-
+    //TODO no magic numbers
     for (int i = 0; i < 27; ++i) {
         if (strcmp(word, commandWords[i]) == 0){
             return true;
