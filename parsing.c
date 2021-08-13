@@ -30,6 +30,7 @@ char** splitLine(char* sourceCode, int wordNum){
     int wordIndex = 0;
     int wordLen;
     while (sourceCode[end] != '\n'){
+        //TODO add support for consecutive whitespaces
         if (sourceCode[end] == ' ' || sourceCode[end] == ','){
             wordLen = end-start;
             words[wordIndex] = malloc(sizeof(char)*(wordLen+1)); //+1 for null terminator
@@ -133,6 +134,10 @@ struct LineOfCode parseLine(char* sourceCode, int address){
 }
 
 LineOfCode* parseFile(char* filename) {
+    //TODO
+}
+
+bool validate_line(LineOfCode line){
     //TODO
 }
 
