@@ -10,7 +10,7 @@ struct parsedFile{
 };
 ParsedFile* createParsedFile(char* filename);
 
-char **splitLines(char *text);
+char **splitLines(char *text, int i);
 LineOfCode *parseLines(char **source_lines, int lines_num);
 int countLines(char *text);
 
