@@ -15,12 +15,14 @@
 int tokenCount(const char* sourceCode){
     int i = 0;
     int counter = 0;
+    // counter seperators
     while (sourceCode[i] != '\n'){
         if(sourceCode[i] == ' ' || sourceCode[i] == ','){
             counter++;
         }
+        i++;
     }
-    return counter;
+    return counter+1;
 }
 
 char** splitLine(char* sourceCode, int wordNum){
@@ -133,10 +135,9 @@ struct LineOfCode parseLine(char* sourceCode, int address){
 
 
 int main(int argc, char* argv[]){
-    char** words = splitLine("MAIN: add $3,$5,$9\n",5);
-    for (int i = 0; i < 5; ++i) {
-        printf("%s ",words[i]);
-    }
+    char *sourceCode = "MAIN: add $3,$5,$9\n";
+    char** words = splitLine(sourceCode, 5);
+    Token* tokens = tokenize(sourceCode);
 }
 
 
