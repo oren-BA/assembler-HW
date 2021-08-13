@@ -10,6 +10,9 @@
 #include "structs/Token.h"
 #include "structs/LineOfCode.h"
 
+#define FALSE 0
+#define TRUE 1
+
 int tokenCount(const char* sourceCode){
     int i = 0;
     int counter = 0;
@@ -137,8 +140,43 @@ LineOfCode* parseFile(char* filename) {
     //TODO
 }
 
-bool validate_line(LineOfCode line){
+bool validateLabelDef(char* w){
     //TODO
+}
+
+enum CommandType getCommandType(char* cmd){
+    //TODO
+}
+
+int validateR(LineOfCode line){
+    //TODO
+}
+
+int validateI(LineOfCode line){
+    //TODO
+}
+
+int validateJ(LineOfCode line){
+    //TODO
+}
+
+bool validate_line(LineOfCode line){
+    int i = 0;
+    if (line.tokens[i].type == LabelDefinition){
+        if (validateLabelDef(line.tokens[i].content) == FALSE) return FALSE;
+        i++;
+    }
+    if (isCommandWord(line.tokens[i].content) == TRUE){
+        enum CommandType commandType = getCommandType(line.tokens[i].content);
+        if (commandType == R){
+            return validateR(line);
+        } else if (commandType == I){
+            return validateI(line);
+        }
+        return validateJ(line);
+    }
+    //TODO add support for data instructions, e.g: .asciz
+
 }
 
 int main(int argc, char* argv[]){
