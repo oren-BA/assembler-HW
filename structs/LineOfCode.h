@@ -1,7 +1,3 @@
-//
-// Created by orenb on 13/08/2021.
-//
-
 #ifndef ASSEMBLER_HW_LINEOFCODE_H
 #define ASSEMBLER_HW_LINEOFCODE_H
 
@@ -10,9 +6,11 @@
 typedef struct LineOfCode LineOfCode;
 struct LineOfCode {
     char* source;
-    BinaryCommand binaryCommand;
+    BinaryCommand binary_command;
     int address;
     struct Token * tokens;
-    int numOfTokens;
+    int tokens_num;
 };
-#endif //ASSEMBLER_HW_LINEOFCODE_H
+
+char** splitLine(char* sourceCode, int wordNum);
+#endif /* ASSEMBLER_HW_LINEOFCODE_H */
