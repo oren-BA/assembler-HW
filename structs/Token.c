@@ -29,10 +29,10 @@ int isCommandWord(char* word){
     char* commandWords[] = {"add", "sub", "and", "or", "nor", "move", "mhvi", "mvlo",
                             "addi", "subi", "andi", "ori", "nori", "bne", "beq", "blt",
                             "bgt", "lb", "sb", "lw", "sw", "lh", "sh", "jmp", "la", "call",
-                            "stop"};
+                            "stop", ".db", ".dh", ".dw", ".entry", ".extern", ".asciz"};
     /*TODO no magic numbers*/
     int i;
-    for (i = 0; i < 27; ++i) {
+    for (i = 0; i < 33; ++i) {
         if (strcmp(word, commandWords[i]) == 0){
             return TRUE;
         }
