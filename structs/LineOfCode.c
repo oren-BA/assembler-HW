@@ -53,9 +53,27 @@ BinaryCommand tokensToBinary(Token *tokens) {
     return *b;
 }
 
+int isDigit(char c) {
+    if ((c >= '0' && c <= '9')) return TRUE;
+    return FALSE;
+}
 
-int validateLabelDef(char *w) {
-    /*TODO*/
+int isLetter(char c){
+    if ((c >= 'a' && c<='z') || (c >= 'A' && c<='Z')) return TRUE;
+    return FALSE;
+}
+
+
+int validateLabel(char *w, int isDefinition) {
+    int len = strlen(w);
+    int i;
+    if (!isLetter(w[0])) return FALSE;
+    for (i = 1; i < len - 1; ++i) {
+        if (!isLetter(w[i]) && !isDigit(w[i])) return FALSE;
+    }
+    if (isDefinition){
+        if (w[len-1] != ':') return FALSE;
+    } else if (!isLetter(w[i]) && !isDigit(w[i])) return FALSE;
     return TRUE;
 }
 
@@ -90,10 +108,7 @@ enum CommandType getCommandType(char *cmd) {
     return I;
 }
 
-int isDigit(char c) {
-    if ((c >= '0' && c <= '9')) return TRUE;
-    return FALSE;
-}
+
 
 int validateTypeOrder(Token *tokens, int token_num, const enum TokenType *types, int types_num) {
     int i;
@@ -119,15 +134,16 @@ int validateRegister(char *text) {
 int validateToken(Token t) {
     if (strlen(t.content) == 0) return FALSE;
     if (t.type == Register) return validateRegister(t.content);
-    if (t.type == LabelDefinition) return validateLabelDef(t.content);
+    if (t.type == LabelDefinition) return validateLabel(t.content, TRUE);
+    if (t.type == Label) return validateLabel(t.content, FALSE);
     return TRUE;
 }
 
 int validateR(LineOfCode line) {
     enum TokenType types[4] = {Command, Register, Register, Register};
     if (line.tokens_num != 4) return FALSE; /*checks if line has 4 tokens */
-    if (validateTypeOrder(line.tokens, line.tokens_num, types, 4) == TRUE) return TRUE;
-    return FALSE;
+    if (!validateTypeOrder(line.tokens, line.tokens_num, types, 4)) return FALSE;
+    return TRUE;
 }
 
 int isConditionBranch(const char *cmd) {
@@ -199,14 +215,12 @@ int validateD(LineOfCode line){
 }
 
 int validateE(LineOfCode line){
-    Token *tokens = line.tokens;
     if (line.tokens_num != 2) return FALSE;
     if (line.tokens[1].type != Label) return FALSE;
     return TRUE;
 }
 
 int validateAscii(LineOfCode line){
-    Token *tokens = line.tokens;
     if (line.tokens_num != 2) return FALSE;
     if (line.tokens[1].type != String) return FALSE;
     return TRUE;

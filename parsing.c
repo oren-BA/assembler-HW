@@ -16,7 +16,7 @@ void createBinary(ParsedFile* file) {
 
 
 int main(int argc, char* argv[]){
-    char *sourceCode = "main: .entry";
+    char *sourceCode = "main: stop";
     LineOfCode* line = createLine(sourceCode, 0);
     int res = validate_line(*line);
     /*int res = validateRegister("$2");*/
