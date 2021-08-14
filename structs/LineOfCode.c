@@ -33,7 +33,7 @@ int tokenCount(const char *sourceCode) {
     int i = 0;
     int counter = 0;
     /* counter seperators */
-    while (sourceCode[i] != '\n') {
+    while (sourceCode[i] != '\0') {
         if (sourceCode[i] == ' ' || sourceCode[i] == ',') {
             counter++;
         }
@@ -92,7 +92,7 @@ int validateRegister(char *text) {
     if (len != 2 && len != 3) return FALSE;
     if (text[0] != '$') return FALSE;
     if (len == 2 && isDigit(text[1]) == FALSE) return FALSE;
-    if (len == 3 && isDigit(text[1]) == FALSE && isDigit(text[2]) == FALSE) return FALSE;
+    if (len == 3 && (isDigit(text[1]) == FALSE || isDigit(text[2]) == FALSE)) return FALSE;
     regNum = strtol(text + 1, NULL, 10);
     if (regNum > 31) return FALSE;
     return TRUE;
@@ -101,13 +101,14 @@ int validateRegister(char *text) {
 int validateToken(Token t){
     if (strlen(t.content) == 0) return FALSE;
     if (t.type == Register) return validateRegister(t.content);
+    if (t.type == LabelDefinition) return validateLabelDef(t.content);
     return TRUE;
 }
 
 int validateR(LineOfCode line) {
     enum TokenType types[4] = {Command, Register, Register, Register};
     if (line.tokens_num != 4) return FALSE; /*checks if line has 4 tokens */
-    if (validateTypeOrder(line.tokens, line.tokens_num, types,4)) return TRUE;
+    if (validateTypeOrder(line.tokens, line.tokens_num, types,4) == TRUE) return TRUE;
     return FALSE;
 }
 
@@ -139,8 +140,12 @@ int validateJ(LineOfCode line) {
 
 
 int validate_line(LineOfCode line) {
+    int i;
     if (line.has_label) {
-        if (validateLabelDef(line.label.content) == FALSE) return FALSE;
+        if (validateToken(line.label) == FALSE) return FALSE;
+    }
+    for (i = 0; i < line.tokens_num; ++i) {
+        if (validateToken(line.tokens[i]) == FALSE) return FALSE;
     }
     if (isCommandWord(line.tokens[0].content) == TRUE) {
         enum CommandType commandType = getCommandType(line.tokens[0].content);
@@ -156,7 +161,7 @@ int validate_line(LineOfCode line) {
 }
 
 LineOfCode *createLine(char *sourceCode, int address) {
-    LineOfCode *l = malloc(sizeof(l));
+    LineOfCode *l = malloc(sizeof(*l));
     l->source = sourceCode;
     l->tokens_num = tokenCount(sourceCode);
     l->has_label = FALSE;
@@ -165,6 +170,7 @@ LineOfCode *createLine(char *sourceCode, int address) {
         l->has_label = TRUE;
         l->label = l->tokens[0];
         ++l->tokens;
+        l->tokens_num--;
     }
     l->address = address;
     l->binary_command = tokensToBinary(l->tokens);

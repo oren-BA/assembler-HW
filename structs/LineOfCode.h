@@ -9,6 +9,8 @@ struct LineOfCode {
     char* source;
     BinaryCommand binary_command;
     int address;
+    int has_label;
+    Token label;
     struct Token * tokens;
     int tokens_num;
 };
@@ -16,6 +18,9 @@ struct LineOfCode {
 Token* tokenize(char* sourceCode, int tokenNum);
 
 int isNumber(const char* word);
+int validate_line(LineOfCode line);
+LineOfCode *createLine(char *sourceCode, int address);
+int validateRegister(char *text);
 
 
 char** splitLine(char* sourceCode, int wordNum);

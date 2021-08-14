@@ -21,18 +21,11 @@ void createBinary(ParsedFile* file) {
 
 
 int main(int argc, char* argv[]){
-    char *sourceCode = "MAIN: add $3,$5,$9\n";
-    char** words = splitLine(sourceCode, 5);
-    Token* tokens = tokenize(sourceCode, 5);
-    int i;
-    for ( i = 0; i < argc; ++i) {
-        char* filename = argv[i];
-        ParsedFile *parsed_file = createParsedFile(filename);
-        createBinary(parsed_file);
-    }
-    char test[3] = "$23";
-    int num = strtol(test+1, NULL,10);
-    printf("%d", num);
+    char *sourceCode = "add $3,$1,$9";
+    LineOfCode* line = createLine(sourceCode, 0);
+    int res = validate_line(*line);
+    /*int res = validateRegister("$2");*/
+    printf("res: %d", res);
     return 0;
 }
 

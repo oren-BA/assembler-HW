@@ -1,6 +1,6 @@
 #ifndef ASSEMBLER_HW_BINARYCOMMAND_H
 #define ASSEMBLER_HW_BINARYCOMMAND_H
-enum CommandType{R, I, J};
+enum CommandType{R, I, J, D, ASCII, E};
 
 typedef struct BinaryCommand BinaryCommand;
 struct  BinaryCommand{
