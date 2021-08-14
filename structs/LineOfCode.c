@@ -205,6 +205,13 @@ int validateE(LineOfCode line){
     return TRUE;
 }
 
+int validateAscii(LineOfCode line){
+    Token *tokens = line.tokens;
+    if (line.tokens_num != 2) return FALSE;
+    if (line.tokens[1].type != String) return FALSE;
+    return TRUE;
+}
+
 int validate_line(LineOfCode line) {
     int i;
     if (line.has_label) {
@@ -224,6 +231,8 @@ int validate_line(LineOfCode line) {
         return validateD(line);
     } else if (commandType == E) {
         return validateE(line);
+    } else if (commandType == ASCII) {
+        return validateAscii(line);
     }
     /*TODO add support for data instructions, e.g: .asciz*/
 
