@@ -3,32 +3,11 @@
 #include <memory.h>
 #include "Token.h"
 #include "LineOfCode.h"
+#include "../utils/string_utils.h"
 
 char** splitLine(char* sourceCode, int wordNum){
-    int end = 0;
-    int start = 0;
-    char** words = (char**)malloc(sizeof(char*) * wordNum);
-    int wordIndex = 0;
-    int wordLen;
-    while (sourceCode[end] != '\n'){
-        /*TODO add support for consecutive whitespaces*/
-        if (sourceCode[end] == ' ' || sourceCode[end] == ','){
-            wordLen = end-start;
-            /* +1 for null terminator */
-            words[wordIndex] = malloc(sizeof(char)*(wordLen+1));
-            memcpy(words[wordIndex], sourceCode+start, wordLen );
-            words[wordIndex][wordLen] = '\0';
-            start = end+1;
-            end++;
-            wordIndex++;
-        }
-        end++;
-    }
-    /* Handle last word */
-    wordLen = end-start;
-    words[wordIndex] = malloc(sizeof(char)*(wordLen+1)); /* +1 for null terminator */
-    memcpy(words[wordIndex], sourceCode+start, wordLen );
-    words[wordIndex][wordLen] = '\0';
+    char delimiters[2] = {' ', ','};
+    char **words = split(sourceCode, wordNum, delimiters, 2);
     return words;
 }
 
@@ -70,4 +49,3 @@ LineOfCode* createLine(char* sourceCode, int address){
     l->binary_command = tokensToBinary(l->tokens);
     return l;
 }
-
