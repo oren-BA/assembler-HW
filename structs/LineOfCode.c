@@ -16,6 +16,8 @@
 #define D_COMMANDS_NUM 3
 #define E_COMMANDS_NUM 2
 
+#define ERROR 2
+
 #include "../utils/string_utils.h"
 
 char **splitLine(char *sourceCode, int wordNum) {
@@ -65,20 +67,23 @@ int isLetter(char c){
 
 
 int validateLabel(char *w, int isDefinition) {
-    int len = strlen(w);
+    unsigned int len = strlen(w);
     int i;
     if (!isLetter(w[0])) return FALSE;
     for (i = 1; i < len - 1; ++i) {
         if (!isLetter(w[i]) && !isDigit(w[i])) return FALSE;
     }
-    if (isDefinition){
-        if (w[len-1] != ':') return FALSE;
-    } else if (!isLetter(w[i]) && !isDigit(w[i])) return FALSE;
+    if (len > 1){
+        if (isDefinition){
+            if (w[len-1] != ':') return FALSE;
+        } else if (!isLetter(w[i]) && !isDigit(w[i])) return FALSE;
+    }
     return TRUE;
 }
 
-enum CommandType getCommandType(char *cmd) {
-    /*TODO add all command types*/
+enum LineType getLineType(LineOfCode line) {
+    /*TODO change default return to ERROR*/
+    char* cmd = line.tokens[0].content;
     int i;
     char *r_commands[] = {"add", "sub", "and", "or", "nor", "move", "mhvi", "mvlo"};
     char *j_commands[] = {"jmp", "la", "call", "stop"};
@@ -121,7 +126,7 @@ int validateTypeOrder(Token *tokens, int token_num, const enum TokenType *types,
 
 int validateRegister(char *text) {
     int regNum;
-    int len = strlen(text);
+    unsigned int len = strlen(text);
     if (len != 2 && len != 3) return FALSE;
     if (text[0] != '$') return FALSE;
     if (len == 2 && isDigit(text[1]) == FALSE) return FALSE;
@@ -191,11 +196,9 @@ int validateJ(LineOfCode line) {
 int getMaxSize(char* wordType){
     if (strcmp(wordType, ".db") == 0){
         return pow(2,7) - 1;
-    }
-    if (strcmp(wordType, ".dh") == 0){
+    } else if (strcmp(wordType, ".dh") == 0){
         return pow(2,15) - 1;
-    }
-    if (strcmp(wordType, ".dw") == 0){
+    } else {
         return pow(2,31) - 1;
     }
 }
@@ -203,9 +206,10 @@ int getMaxSize(char* wordType){
 int validateD(LineOfCode line){
     int i;
     int num;
+    int maxNum;
     Token *tokens = line.tokens;
     if (line.tokens_num < 2) return FALSE;
-    int maxNum = getMaxSize(tokens[0].content);
+    maxNum = getMaxSize(tokens[0].content);
     for (i = 1; i < line.tokens_num; ++i) {
         if (tokens[i].type != Number) return FALSE;
         num = strtol(tokens[i].content,NULL,10);
@@ -228,13 +232,14 @@ int validateAscii(LineOfCode line){
 
 int validate_line(LineOfCode line) {
     int i;
+    enum LineType commandType;
     if (line.has_label) {
         if (validateToken(line.label) == FALSE) return FALSE;
     }
     for (i = 0; i < line.tokens_num; ++i) {
         if (validateToken(line.tokens[i]) == FALSE) return FALSE;
     }
-    enum CommandType commandType = getCommandType(line.tokens[0].content);
+    commandType = getLineType(line);
     if (commandType == R) {
         return validateR(line);
     } else if (commandType == I) {
@@ -247,8 +252,9 @@ int validate_line(LineOfCode line) {
         return validateE(line);
     } else if (commandType == ASCII) {
         return validateAscii(line);
+    } else {
+        return ERROR;
     }
-    /*TODO add support for data instructions, e.g: .asciz*/
 
 }
 

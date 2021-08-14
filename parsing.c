@@ -16,7 +16,7 @@ void createBinary(ParsedFile* file) {
 
 
 int main(int argc, char* argv[]){
-    char *sourceCode = "STR: .asciz 4";
+    char *sourceCode = ".extern x";
     LineOfCode* line = createLine(sourceCode, 0);
     int res = validate_line(*line);
     /*int res = validateRegister("$2");*/
