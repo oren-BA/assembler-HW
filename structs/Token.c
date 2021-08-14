@@ -70,6 +70,8 @@ Token wordToToken(char* word){
         t.type = String;
     } else if (word[strlen(word)-1] == ':'){
         t.type = LabelDefinition;
+    } else {
+        t.type = Label;
     }
     return t;
 }

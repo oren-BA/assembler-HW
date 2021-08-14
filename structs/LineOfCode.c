@@ -11,9 +11,10 @@
 #define R_COMMANDS_NUM 8
 #define I_COMMANDS_NUM 15
 #define J_COMMANDS_NUM 4
+
 #include "../utils/string_utils.h"
 
-char** splitLine(char* sourceCode, int wordNum){
+char **splitLine(char *sourceCode, int wordNum) {
     char delimiters[2] = {' ', ','};
     char **words = split(sourceCode, wordNum, delimiters, 2);
     return words;
@@ -55,7 +56,7 @@ int validateLabelDef(char *w) {
 }
 
 enum CommandType getCommandType(char *cmd) {
-    /*TODO*/
+    /*TODO add all command types*/
     int i;
     char *rCommands[] = {"add", "sub", "and", "or", "nor", "move", "mhvi", "mvlo"};
     char *jCommands[] = {"jmp", "la", "call", "stop"};
@@ -98,7 +99,7 @@ int validateRegister(char *text) {
     return TRUE;
 }
 
-int validateToken(Token t){
+int validateToken(Token t) {
     if (strlen(t.content) == 0) return FALSE;
     if (t.type == Register) return validateRegister(t.content);
     if (t.type == LabelDefinition) return validateLabelDef(t.content);
@@ -108,11 +109,17 @@ int validateToken(Token t){
 int validateR(LineOfCode line) {
     enum TokenType types[4] = {Command, Register, Register, Register};
     if (line.tokens_num != 4) return FALSE; /*checks if line has 4 tokens */
-    if (validateTypeOrder(line.tokens, line.tokens_num, types,4) == TRUE) return TRUE;
+    if (validateTypeOrder(line.tokens, line.tokens_num, types, 4) == TRUE) return TRUE;
     return FALSE;
 }
 
-int isConditionBranch(char *cmd) {
+int isConditionBranch(const char *cmd) {
+    int i;
+    char *commands[] = {"beq", "bne", "blt", "bgt"};
+    for (i = 0; i < 4; ++i) {
+        if (strcmp(cmd,commands[i]) == 0) return TRUE;
+    }
+    return FALSE;
 
 }
 
@@ -123,8 +130,8 @@ int validateI(LineOfCode line) {
     enum TokenType types[4] = {Command, Register, Register, Label};
     enum TokenType types2[4] = {Command, Register, Number, Register};
     if (line.tokens_num != 4) return FALSE; /*checks if line has 4 tokens*/
-    if (isConditionBranch(tokens[0].content) ==
-        TRUE) {     /*checks if command is in the condition branch format which is: cmd, reg, reg, label*/
+    /*checks if command is in the condition branch format which is: cmd, reg, reg, label*/
+    if (isConditionBranch(tokens[0].content) == TRUE) {
         if (validateTypeOrder(tokens, line.tokens_num, types, 4)) return TRUE;
     } else {     /*checks if command is in the other format which is: cmd, reg, num, reg*/
         if (validateTypeOrder(tokens, line.tokens_num, types2, 4)) {
@@ -135,9 +142,18 @@ int validateI(LineOfCode line) {
 }
 
 int validateJ(LineOfCode line) {
-    /*TODO*/
+    Token *tokens = line.tokens;
+    if (strcmp(tokens[0].content,"stop") == 0){
+        if (line.tokens_num == 1) return TRUE;
+        return FALSE;
+    }
+    if (line.tokens_num != 2) return FALSE;
+    if (tokens[1].type == Label) return TRUE;
+    if (strcmp(tokens[0].content,"jmp") == 0 && tokens[1].type == Register){
+        return TRUE;
+    }
+    return FALSE;
 }
-
 
 int validate_line(LineOfCode line) {
     int i;
