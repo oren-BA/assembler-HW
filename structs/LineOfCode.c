@@ -2,6 +2,8 @@
 #include <malloc.h>
 #include <memory.h>
 #include <stdlib.h>
+#include <math.h>
+
 
 #include "Token.h"
 #include "LineOfCode.h"
@@ -11,6 +13,8 @@
 #define R_COMMANDS_NUM 8
 #define I_COMMANDS_NUM 15
 #define J_COMMANDS_NUM 4
+#define D_COMMANDS_NUM 3
+#define E_COMMANDS_NUM 2
 
 #include "../utils/string_utils.h"
 
@@ -58,16 +62,29 @@ int validateLabelDef(char *w) {
 enum CommandType getCommandType(char *cmd) {
     /*TODO add all command types*/
     int i;
-    char *rCommands[] = {"add", "sub", "and", "or", "nor", "move", "mhvi", "mvlo"};
-    char *jCommands[] = {"jmp", "la", "call", "stop"};
+    char *r_commands[] = {"add", "sub", "and", "or", "nor", "move", "mhvi", "mvlo"};
+    char *j_commands[] = {"jmp", "la", "call", "stop"};
+    char *d_commands[] = {".db", ".dw", ".dh"};
+    char *e_commands[] = {".entry", ".extern"};
+    if (strcmp(cmd, ".asciz") == 0) return ASCII;
     for (i = 0; i < R_COMMANDS_NUM; ++i) {
-        if (strcmp(cmd, rCommands[i]) == 0) {
+        if (strcmp(cmd, r_commands[i]) == 0) {
             return R;
         }
     }
     for (i = 0; i < J_COMMANDS_NUM; ++i) {
-        if (strcmp(cmd, jCommands[i]) == 0) {
+        if (strcmp(cmd, j_commands[i]) == 0) {
             return J;
+        }
+    }
+    for (i = 0; i < D_COMMANDS_NUM; ++i) {
+        if (strcmp(cmd, d_commands[i]) == 0) {
+            return D;
+        }
+    }
+    for (i = 0; i < E_COMMANDS_NUM; ++i) {
+        if (strcmp(cmd, e_commands[i]) == 0) {
+            return E;
         }
     }
     return I;
@@ -155,6 +172,39 @@ int validateJ(LineOfCode line) {
     return FALSE;
 }
 
+int getMaxSize(char* wordType){
+    if (strcmp(wordType, ".db") == 0){
+        return pow(2,7) - 1;
+    }
+    if (strcmp(wordType, ".dh") == 0){
+        return pow(2,15) - 1;
+    }
+    if (strcmp(wordType, ".dw") == 0){
+        return pow(2,31) - 1;
+    }
+}
+
+int validateD(LineOfCode line){
+    int i;
+    int num;
+    Token *tokens = line.tokens;
+    if (line.tokens_num < 2) return FALSE;
+    int maxNum = getMaxSize(tokens[0].content);
+    for (i = 1; i < line.tokens_num; ++i) {
+        if (tokens[i].type != Number) return FALSE;
+        num = strtol(tokens[i].content,NULL,10);
+        if (num < -(maxNum+1) || num > maxNum) return FALSE;
+    }
+    return TRUE;
+}
+
+int validateE(LineOfCode line){
+    Token *tokens = line.tokens;
+    if (line.tokens_num != 2) return FALSE;
+    if (line.tokens[1].type != Label) return FALSE;
+    return TRUE;
+}
+
 int validate_line(LineOfCode line) {
     int i;
     if (line.has_label) {
@@ -163,14 +213,17 @@ int validate_line(LineOfCode line) {
     for (i = 0; i < line.tokens_num; ++i) {
         if (validateToken(line.tokens[i]) == FALSE) return FALSE;
     }
-    if (isCommandWord(line.tokens[0].content) == TRUE) {
-        enum CommandType commandType = getCommandType(line.tokens[0].content);
-        if (commandType == R) {
-            return validateR(line);
-        } else if (commandType == I) {
-            return validateI(line);
-        }
+    enum CommandType commandType = getCommandType(line.tokens[0].content);
+    if (commandType == R) {
+        return validateR(line);
+    } else if (commandType == I) {
+        return validateI(line);
+    } else if (commandType == J) {
         return validateJ(line);
+    }  else if (commandType == D) {
+        return validateD(line);
+    } else if (commandType == E) {
+        return validateE(line);
     }
     /*TODO add support for data instructions, e.g: .asciz*/
 

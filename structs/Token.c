@@ -42,7 +42,7 @@ int isCommandWord(char* word){
 
 int isNumber(const char* word){
     int i = 0;
-    if (word[0] == '-'){
+    if (word[0] == '-' || word[0] == '+'){
         i++;
     }
     while (word[i] != '\0'){

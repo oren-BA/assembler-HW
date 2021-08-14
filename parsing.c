@@ -9,11 +9,6 @@
 #include "structs/LineOfCode.h"
 #include "structs/ParsedFile.h"
 
-/*
-bool validate_line(LineOfCode line){
-     TODO
-}
-*/
 
 void createBinary(ParsedFile* file) {
 
@@ -21,11 +16,13 @@ void createBinary(ParsedFile* file) {
 
 
 int main(int argc, char* argv[]){
-    char *sourceCode = "main: stop";
+    char *sourceCode = "main: .entry";
     LineOfCode* line = createLine(sourceCode, 0);
     int res = validate_line(*line);
     /*int res = validateRegister("$2");*/
-    printf("res: %d", res);
+    printf("res: %d\n", res);
+    printf("check: %d", strtol("-50",NULL,10));
+
     return 0;
 }
 
