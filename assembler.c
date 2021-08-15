@@ -58,6 +58,10 @@ BinaryCommand *dataLineToBinary(LineOfCode line) {
     int values[6];
     int sizes[6];
     BinaryCommand *binary;
+    char *i_commands[] = {"addi", "subi", "andi", "ori", "nori", "bne", "beq", "blt",
+                          "bgt", "lb", "sb", "lw", "sw", "lh", "sh"};
+    char *j_commands[] = {"addi", "subi", "andi", "ori", "nori", "bne", "beq", "blt",
+                          "bgt", "lb", "sb", "lw", "sw", "lh", "sh"};
 
     if (line_type == ASCII) {
         size = strlen(line.tokens[1].content) - 2; /* -2 to get the size without the quotes */
@@ -128,9 +132,9 @@ BinaryCommand *dataLineToBinary(LineOfCode line) {
             values[3] = strtol(line.tokens[2].content + 1, NULL, 10);
             values[4] = strtol(line.tokens[3].content + 1, NULL, 10);
         } else if (getLineType(line) == I) {
+            /*TODO handle mask*/
             word_num = 4;
-            char *i_commands[] = {"addi", "subi", "andi", "ori", "nori", "bne", "beq", "blt",
-                                  "bgt", "lb", "sb", "lw", "sw", "lh", "sh"};
+
             for (i = 0; i < 15; ++i) {
                 if (strcmp(line.tokens[0].content, i_commands[i]) == 0){
                     values[3] = i+10;
@@ -146,6 +150,30 @@ BinaryCommand *dataLineToBinary(LineOfCode line) {
             values[0] = strtol(line.tokens[immediate_location-1].content, NULL, 10);
             values[1] = strtol(line.tokens[rt_loc-1].content + 1, NULL, 10);
             values[2] = strtol(line.tokens[rs_loc].content + 1, NULL, 10);
+        } else { //Jcommand
+            /*TODO handle mask*/
+            word_num = 3;
+            sizes[0] = 25;
+            sizes[1] = 1;
+            sizes[2] = 6;
+            if (strcmp(line.tokens[0].content, "jmp") == 0){
+                values[2] = 30;
+            }
+            if (strcmp(line.tokens[0].content, "la") == 0){
+                values[2] = 31;
+            }
+            if (strcmp(line.tokens[0].content, "call") == 0){
+                values[2] = 32;
+            }
+            if (strcmp(line.tokens[0].content, "stop") == 0){
+                values[2] = 63;
+            }
+            values[0] = 0;
+            values[1] = 0;
+            if (line.tokens[1].type == Register){
+                values[1] = 1;
+                values[0] = strtol(line.tokens[1].content + 1, NULL, 10);
+            }
         }
         for (i = 0; i < word_num; ++i) {
             write_bit_characters((char *) (&str_payload) + start, values[i], sizes[i]);
