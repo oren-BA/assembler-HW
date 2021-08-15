@@ -258,7 +258,7 @@ int validate_line(LineOfCode line) {
 
 }
 
-LineOfCode *createLine(char *sourceCode, int address) {
+LineOfCode *createLine(char *sourceCode) {
     LineOfCode *l = malloc(sizeof(*l));
     l->source = sourceCode;
     l->tokens_num = tokenCount(sourceCode);
@@ -270,8 +270,8 @@ LineOfCode *createLine(char *sourceCode, int address) {
         ++l->tokens;
         l->tokens_num--;
     }
-    l->address = address;
-    l->binary_command = tokensToBinary(l->tokens);
+    l->address = 0;
+    l->binary = NULL;
     return l;
 }
 

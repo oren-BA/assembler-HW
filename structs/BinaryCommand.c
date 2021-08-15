@@ -1,9 +1,10 @@
+#include <malloc.h>
 #include "BinaryCommand.h"
 
-BinaryCommand *createCommand(enum CommandType t){
+BinaryCommand *createBinary(size_t size, char* payload, char* mask){
     BinaryCommand* command_ptr = malloc(sizeof(BinaryCommand));
-    command_ptr->command = 0;
-    command_ptr->mask = 0;
-    command_ptr->type = t;
+    command_ptr->payload = payload;
+    command_ptr->mask = mask;
+    command_ptr->size = size;
     return command_ptr;
 }

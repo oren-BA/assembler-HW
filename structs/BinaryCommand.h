@@ -4,11 +4,11 @@ enum LineType{R, I, J, D, ASCII, E};
 
 typedef struct BinaryCommand BinaryCommand;
 struct  BinaryCommand{
-    int command;
-    int mask; /* indicates which bits are yet to be determined. 0 - not determined */
-    enum LineType type;
+    unsigned int size;
+    char* payload;
+    char* mask; /* indicates which bits are yet to be determined. 0 - not determined */
 } ;
 
-BinaryCommand *createCommand(enum CommandType);
+BinaryCommand *createBinary(unsigned int size, char* payload, char* mask);
 
 #endif /* ASSEMBLER_HW_BINARYCOMMAND_H */

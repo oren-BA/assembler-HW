@@ -7,7 +7,7 @@
 typedef struct LineOfCode LineOfCode;
 struct LineOfCode {
     char* source;
-    BinaryCommand binary_command;
+    BinaryCommand* binary;
     int address;
     int has_label;
     Token label;
@@ -19,9 +19,10 @@ Token* tokenize(char* sourceCode, int tokenNum);
 
 int isNumber(const char* word);
 int validate_line(LineOfCode line);
-LineOfCode *createLine(char *sourceCode, int address);
+LineOfCode *createLine(char *sourceCode);
 int validateRegister(char *text);
 
 
 char** splitLine(char* sourceCode, int wordNum);
+enum LineType getLineType(LineOfCode code);
 #endif /* ASSEMBLER_HW_LINEOFCODE_H */
