@@ -40,58 +40,7 @@ char **split(char *text, int word_num, const char *delimiters, int delimiters_nu
     return words;
 }
 
-char **split2(char *text, int word_num) {
-    text = "a  \"c b\"  , d ";
-    word_num = 3;
-    int end = 0;
-    int start = 0;
-    char **words = (char **) malloc(sizeof(char *) * word_num);
-    int word_index = 0;
-    int is_string = FALSE;
-    int is_empty = TRUE;
-    int wordLen;
-    while (text[end] != '\0') { // a  b
-        if (text[end] != ' ' && text[end] != ',') {
-            is_empty = FALSE;
-        }
-        if (text[end] == '\"') {
-            if (is_string) {
-                is_string = FALSE;
-            } else {
-                is_string = TRUE;
-            }
-        }
-        if (!is_string) {
-            if (text[end] == ',' && is_empty) {
-                /*TODO handle error*/
-            } else if (text[end] == ' ' && end == start) {
-                start++;
-            } else if ((text[end] == ',' || text[end] == ' ')) {
-                wordLen = end - start;
-                /* +1 for null terminator */
-                words[word_index] = malloc(sizeof(char) * (wordLen + 1));
-                memcpy(words[word_index], text + start, wordLen);
-                words[word_index][wordLen] = '\0';
-                start = end + 1;
-                word_index++;
-                if (text[end] == ','){
-                    is_empty = TRUE;
-                }
-            }
-        }
 
-        end++;
-    }
-    /* Handle last word */
-    if (!is_empty){
-        wordLen = end - start;
-        words[word_index] = malloc(sizeof(char) * (wordLen + 1)); /* +1 for null terminator */
-        memcpy(words[word_index], text + start, wordLen);
-        words[word_index][wordLen] = '\0';
-    }
-
-    return words;
-}
 
 int countUselessWhiteSpace(char* word){
     int count = 0;
@@ -158,6 +107,47 @@ char* eliminateWhiteSpace(char* word){
         }
     }
     return new_word;
+}
+
+char **split2(char *old_text, int word_num) {
+    char* text = eliminateWhiteSpace(old_text);
+    int end = 0;
+    int start = 0;
+    char **words = (char **) malloc(sizeof(char *) * word_num);
+    int word_index = 0;
+    int is_string = FALSE;
+    int wordLen;
+    while (text[end] != '\0') { // a  b
+        if (text[end] == '\"') {
+            if (is_string) {
+                is_string = FALSE;
+            } else {
+                is_string = TRUE;
+            }
+        }
+        if (!is_string) {
+            if ((text[end] == ',' || text[end] == ' ')) {
+                wordLen = end - start;
+                /* +1 for null terminator */
+                words[word_index] = malloc(sizeof(char) * (wordLen + 1));
+                memcpy(words[word_index], text + start, wordLen);
+                words[word_index][wordLen] = '\0';
+                start = end + 1;
+                word_index++;
+            }
+        }
+        end++;
+    }
+    /* Handle last word */
+    wordLen = end - start;
+    /* +1 for null terminator */
+    words[word_index] = malloc(sizeof(char) * (wordLen + 1));
+    memcpy(words[word_index], text + start, wordLen);
+    words[word_index][wordLen] = '\0';
+    start = end + 1;
+    word_index++;
+
+    return words;
 }
 
 
