@@ -155,7 +155,8 @@ BinaryCommand *dataLineToBinary(LineOfCode line) {
                 mask[i] = (char) 0xff;
             }
             if (immediate_location == 4){
-                mask[3] = 0;
+                mask[0] = 0;
+                mask[1] = 0;
             }
             rt_loc = (3*4)/immediate_location;
             values[0] = strtol(line.tokens[immediate_location-1].content, NULL, 10);
