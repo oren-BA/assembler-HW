@@ -20,6 +20,7 @@ struct SymbolTableEntry{
 void insertSymbol(SymbolTable* table, char* symbol, unsigned int value, int attributes);
 SymbolTable* createSymbolTable();
 void destroySymbolTable(SymbolTable* table);
+void addAttribute(SymbolTable *table, struct Token token, enum SymbolAttribute attribute);
 
 
 #endif

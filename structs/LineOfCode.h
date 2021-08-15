@@ -14,6 +14,7 @@ struct LineOfCode {
     Token label;
     struct Token * tokens;
     int tokens_num;
+    int using_extern;
 };
 
 Token* tokenize(char* sourceCode, int tokenNum);
@@ -25,5 +26,5 @@ int validateRegister(char *text);
 
 
 char** splitLine(char* sourceCode, int wordNum);
-enum LineType getLineType(LineOfCode code);
+enum LineType getLineType(LineOfCode* code);
 #endif /* ASSEMBLER_HW_LINEOFCODE_H */
