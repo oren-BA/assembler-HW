@@ -93,11 +93,12 @@ BinaryCommand *dataLineToBinary(LineOfCode* line) {
         payload = malloc(CODE_SIZE);
         char str_payload[33];
         int start = 31;
+        size = 4;
         str_payload[32] = '\0';
         if (getLineType(line) == R) {
             /* unused*/
-            mask = malloc(4);
-            for (i = 0; i < 4; ++i) {
+            mask = malloc(size);
+            for (i = 0; i < size; ++i) {
                 mask[i] = (char) 0xff;
             }
             word_num = 6;
@@ -133,9 +134,9 @@ BinaryCommand *dataLineToBinary(LineOfCode* line) {
             sizes[3] = 5;
             sizes[4] = 5;
             sizes[5] = 6;
-            values[2] = strtol(line->tokens[1].content + 1, NULL, 10);
+            values[2] = strtol(line->tokens[3].content + 1, NULL, 10);
             values[3] = strtol(line->tokens[2].content + 1, NULL, 10);
-            values[4] = strtol(line->tokens[3].content + 1, NULL, 10);
+            values[4] = strtol(line->tokens[1].content + 1, NULL, 10);
         } else if (getLineType(line) == I) {
             /*TODO handle mask*/
             word_num = 4;
@@ -151,8 +152,8 @@ BinaryCommand *dataLineToBinary(LineOfCode* line) {
             sizes[3] = 6;
             rs_loc = 1;
             immediate_location = getImmediateLocation(line->tokens[0].content);
-            mask = malloc(4);
-            for (i = 0; i < 4; ++i) {
+            mask = malloc(size);
+            for (i = 0; i < size; ++i) {
                 mask[i] = (char) 0xff;
             }
             if (immediate_location == 4){
@@ -165,8 +166,8 @@ BinaryCommand *dataLineToBinary(LineOfCode* line) {
             values[2] = strtol(line->tokens[rs_loc].content + 1, NULL, 10);
         } else {
             /*TODO handle mask*/
-            mask = malloc(4);
-            for (i = 0; i < 4; ++i) {
+            mask = malloc(size);
+            for (i = 0; i < size; ++i) {
                 mask[i] = (char) 0xff;
             }
             word_num = 3;

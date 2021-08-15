@@ -28,7 +28,7 @@ int countLines(char *filename) {
 
 char **splitLines(char *text, int lines_num) {
     char delim[1] = {'\n'};
-    return split(text, 1, delim, 1);
+    return split(text, lines_num, delim, 1);
 }
 
 LineOfCode **parseLines(char **source_lines, int lines_num) {
@@ -83,9 +83,10 @@ void printAddress(int address){
 
 void printPayload(char* payload, int size){
     int i;
+    char* c;
     for (i = 0; i < size; ++i) {
-        printf("%c", payload[i]);
-        if (i%2 == 1) printf(" ");
+        c = payload+i;
+        printf("%x ", c[0] & 0xff);
     }
 }
 
