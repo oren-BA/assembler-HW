@@ -60,7 +60,9 @@ Token wordToToken(char* word, int position){
     Token t;
     t.content = malloc(strlen(word));
     strcpy(t.content, word);
-    if(word[0] == '$'){
+    if (strlen(word) == 0){
+        t.type = Empty;
+    } else if(word[0] == '$'){
         t.type = Register;
     } else if(isCommandWord(word)){
         t.type = Command;
@@ -74,7 +76,6 @@ Token wordToToken(char* word, int position){
         t.type = Command;
     } else {
         t.type = Label;
-
     }
     return t;
 }

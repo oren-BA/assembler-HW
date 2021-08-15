@@ -27,7 +27,7 @@ char **splitLine(char *sourceCode, int wordNum) {
 }
 
 Token *tokenize(char *sourceCode, int tokenNum) {
-    char **words = splitLine(sourceCode, tokenNum);
+    char **words = split2(sourceCode, tokenNum);
     Token *tokens = (Token *) malloc(sizeof(Token) * tokenNum);
     int i;
     for (i = 0; i < tokenNum; ++i) {
@@ -150,7 +150,7 @@ int validateToken(Token t, int line_no) {
     int check = TRUE;
     if (strlen(t.content) == 0) {
         check = FALSE;
-        printf("Line %d: internal error - empty token\n", line_no);
+        printf("Line %d: empty operand\n", line_no);
     }
     if (t.type == Register) {
         check = validateRegister(t.content);

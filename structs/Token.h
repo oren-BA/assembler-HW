@@ -7,6 +7,7 @@
 #include "BinaryCommand.h"
 
 enum TokenType{
+    Empty,
     LabelDefinition,
     Label,
     Command,
