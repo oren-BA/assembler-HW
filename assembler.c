@@ -242,7 +242,7 @@ int first_pass(ParsedFile *file, SymbolTable *symbol_table, unsigned int* ICF, u
     return 0;
 }
 
-void completeBinary(LineOfCode *pCode, SymbolTable *pTable) {
+void completeBinary(SymbolTable *pTable, LineOfCode *pCode) {
     //move to Line.c
 }
 
@@ -261,7 +261,7 @@ int second_pass(ParsedFile *file, SymbolTable *symbol_table){
             continue;
         }
         /* code line */
-        completeBinary(line, symbol_table);
+        completeBinary(symbol_table, line);
         if (getLineType(line) == J
             && strcmp(line->tokens[0].content, "stop") != 0
             && ((getLabelAtrributes(symbol_table, line->tokens[1].content) & EXTERN) != 0)){
