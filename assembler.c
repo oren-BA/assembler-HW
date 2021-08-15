@@ -242,15 +242,31 @@ int first_pass(ParsedFile *file, SymbolTable *symbol_table, unsigned int* ICF, u
     return 0;
 }
 
+void completeBinary(LineOfCode *pCode, SymbolTable *pTable) {
+    //move to Line.c
+}
+
+int getLabelAtrributes(SymbolTable *pTable, char *content) {
+    return 0;
+}
+
 int second_pass(ParsedFile *file, SymbolTable *symbol_table){
     int line_index;
     for (line_index = 0; line_index < file->lines_num; ++line_index) {
         LineOfCode* line = file->lines[line_index];
         if (line->tokens[0].content[0] == '.'){
-            if (strcmp(line->tokens[0].content, ".entry") != 0){
-                continue;
+            if (strcmp(line->tokens[0].content, ".entry") == 0){
+                addAttribute(symbol_table, line->tokens[1], EXTERN);
             }
-            addAttribute(symbol_table, line->tokens[1], EXTERN);
+            continue;
+        }
+        /* code line */
+        completeBinary(line, symbol_table);
+        if (getLineType(line) == J
+            && strcmp(line->tokens[0].content, "stop") != 0
+            && ((getLabelAtrributes(symbol_table, line->tokens[1].content) & EXTERN) != 0)){
+            /* J instruction (except stop) that uses a label attributed as external */
+            line->using_extern = TRUE;
         }
     }
     return 0;

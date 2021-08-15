@@ -334,6 +334,7 @@ LineOfCode *createLine(char *sourceCode) {
     }
     l->address = 0;
     l->binary = NULL;
+    l->using_extern = FALSE;
     return l;
 }
 

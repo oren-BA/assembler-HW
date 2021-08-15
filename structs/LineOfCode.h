@@ -14,6 +14,7 @@ struct LineOfCode {
     Token label;
     struct Token * tokens;
     int tokens_num;
+    int using_extern;
 };
 
 Token* tokenize(char* sourceCode, int tokenNum);
