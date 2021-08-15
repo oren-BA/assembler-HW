@@ -190,8 +190,8 @@ BinaryCommand *dataLineToBinary(LineOfCode line) {
                 values[1] = 1;
                 values[0] = strtol(line.tokens[1].content + 1, NULL, 10);
             } else { /*handle mask*/
-                mask[0] = (char) 0xfe;
-                for (i = 1; i < 4; ++i) {
+                mask[3] = (char) 0xfe;
+                for (i = 0; i < 3; ++i) {
                     mask[i] = (char) 0x00;
                 }
             }
