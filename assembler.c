@@ -234,8 +234,6 @@ int first_pass(ParsedFile *file) {
             }
             line.binary = dataLineToBinary(line);
         }
-
-
     }
     return 0;
 }
