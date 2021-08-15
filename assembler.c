@@ -208,11 +208,10 @@ BinaryCommand *dataLineToBinary(LineOfCode line) {
 }
 
 
-int first_pass(ParsedFile *file) {
+int first_pass(ParsedFile *file, SymbolTable *symbol_table, int* ICF, int* DCF) {
     unsigned int IC = 100;
     unsigned int DC = 0;
     int label_exists = FALSE;
-    SymbolTable *symbol_table = createSymbolTable();
     int line_index;
     for (line_index = 0; line_index < file->lines_num; ++line_index) {
         LineOfCode line = *file->lines[line_index];
@@ -234,10 +233,14 @@ int first_pass(ParsedFile *file) {
                 insertSymbol(symbol_table, line.label.content, IC, CODE);
             }
             line.binary = dataLineToBinary(line);
+            IC += 4;
         }
-
-
     }
+    *ICF = IC;
+    *DCF = DC;
     return 0;
 }
 
+int second_pass(ParsedFile *file, SymbolTable *symbol_table){
+    return 0;
+}
