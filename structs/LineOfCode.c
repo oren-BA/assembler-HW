@@ -1,5 +1,5 @@
 
-#include <malloc.h>
+#include <stdlib.h>
 #include <memory.h>
 #include <stdlib.h>
 #include <math.h>

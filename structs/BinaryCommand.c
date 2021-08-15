@@ -1,4 +1,4 @@
-#include <malloc.h>
+#include <stdlib.h>
 #include "BinaryCommand.h"
 
 BinaryCommand *createBinary(size_t size, char* payload, char* mask){

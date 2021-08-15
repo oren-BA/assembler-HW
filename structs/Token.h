@@ -1,7 +1,7 @@
 #ifndef ASSEMBLER_HW_TOKEN_H
 #define ASSEMBLER_HW_TOKEN_H
 
-#include <malloc.h>
+#include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
 #include "BinaryCommand.h"

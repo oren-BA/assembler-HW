@@ -1,5 +1,5 @@
 #include <memory.h>
-#include <malloc.h>
+#include <stdlib.h>
 
 #define FALSE 0
 #define TRUE 1

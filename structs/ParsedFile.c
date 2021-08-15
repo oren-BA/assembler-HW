@@ -36,7 +36,7 @@ LineOfCode **parseLines(char **source_lines, int lines_num) {
 }
 
 ParsedFile *createParsedFile(char *filename) {
-    char* text = "MAIN: add $1,$2,$3"; /* read(filename, ...); */
+    char* text = "LOOP: ori $9,-5,$2"; /* read(filename, ...); */
     int lines_num = countLines(text);
     char** source_lines = splitLines(text, lines_num);
     ParsedFile *parsed_file = malloc(sizeof(*parsed_file));
