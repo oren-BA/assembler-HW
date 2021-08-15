@@ -18,3 +18,7 @@ SymbolTable *createSymbolTable() {
 void destroySymbolTable(SymbolTable *table) {
 
 }
+
+void addAttribute(SymbolTable *table, struct Token token, enum SymbolAttribute attribute) {
+
+}

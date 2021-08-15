@@ -25,5 +25,5 @@ int validateRegister(char *text);
 
 
 char** splitLine(char* sourceCode, int wordNum);
-enum LineType getLineType(LineOfCode code);
+enum LineType getLineType(LineOfCode* code);
 #endif /* ASSEMBLER_HW_LINEOFCODE_H */

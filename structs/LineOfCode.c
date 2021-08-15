@@ -1,8 +1,6 @@
-
-#include <stdlib.h>
-#include <memory.h>
 #include <stdlib.h>
 #include <math.h>
+#include "../utils/string_utils.h"
 
 
 #include "Token.h"
@@ -18,7 +16,6 @@
 
 #define ERROR 2
 
-#include "../utils/string_utils.h"
 
 char **splitLine(char *sourceCode, int wordNum) {
     char delimiters[2] = {' ', ','};
@@ -81,9 +78,9 @@ int validateLabel(char *w, int isDefinition) {
     return TRUE;
 }
 
-enum LineType getLineType(LineOfCode line) {
+enum LineType getLineType(LineOfCode* line) {
     /*TODO change default return to ERROR*/
-    char *cmd = line.tokens[0].content;
+    char *cmd = line->tokens[0].content;
     int i;
     char *r_commands[] = {"add", "sub", "and", "or", "nor", "move", "mhvi", "mvlo"};
     char *i_commands[] = {"addi", "subi", "andi", "ori", "nori", "bne", "beq", "blt",
@@ -296,7 +293,7 @@ int validate_line(LineOfCode line) {
     for (i = 0; i < line.tokens_num; ++i) {
         if (validateToken(line.tokens[i], line.line_no) == FALSE) has_error = TRUE;
     }
-    commandType = getLineType(line);
+    commandType = getLineType(&line);
     if (commandType == TypeError) {
         printf("Line %d: unrecognized directive %s\n", line.line_no, line.tokens[0].content);
         has_error = TRUE;
