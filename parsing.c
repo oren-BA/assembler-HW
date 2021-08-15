@@ -9,10 +9,16 @@
 #include "structs/LineOfCode.h"
 #include "structs/ParsedFile.h"
 #include "assembler.h"
+#include "utils/string_utils.h"
+
 
 int main(int argc, char* argv[]){
-    ParsedFile *file = createParsedFile("");
-    first_pass(file);
+//    split2("",0);
+//    ParsedFile *file = createParsedFile("");
+//    first_pass(file);
+//    struct LineOfCode line = *createLine(".la $2");
+//    validate_line(line);
+    eliminateWhiteSpace("    a  b , s  , d, c ,\"h h        h \"    ");
 //    printf("%d\n",1<<1);
 //    char c[2];
 //    c[0] = (char)(0xabcd & 0xff);
