@@ -9,6 +9,7 @@ struct LineOfCode {
     char* source;
     BinaryCommand* binary;
     int address;
+    int line_no;
     int has_label;
     Token label;
     struct Token * tokens;

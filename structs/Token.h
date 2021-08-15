@@ -21,7 +21,7 @@ struct Token{
     char* content;
 } ;
 
-Token wordToToken(char*);
+Token wordToToken(char*,int);
 int isCommandWord(char* word);
 int isString(char* word);
 

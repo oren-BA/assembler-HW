@@ -56,7 +56,7 @@ int isNumber(const char* word){
 
 
 
-Token wordToToken(char* word){
+Token wordToToken(char* word, int position){
     Token t;
     t.content = malloc(strlen(word));
     strcpy(t.content, word);
@@ -70,8 +70,11 @@ Token wordToToken(char* word){
         t.type = String;
     } else if (word[strlen(word)-1] == ':'){
         t.type = LabelDefinition;
+    } else if (position == 0){ /* first token without ':' has to be command name*/
+        t.type = Command;
     } else {
         t.type = Label;
+
     }
     return t;
 }
