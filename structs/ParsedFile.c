@@ -8,18 +8,22 @@
 #include "ParsedFile.h"
 #include "../utils/string_utils.h"
 
-int countLines(char *text) {
-    int count = 1;
-    int i;
-
-    if (strlen(text) == 0)
+int countLines(char *filename) {
+    FILE *fp = fopen(filename, "r");
+    int ch = 0;
+    int lines = 0;
+    if (fp == NULL) {
         return 0;
-
-    for (i = 0; i < strlen(text); ++i) {
-        if (text[i] == '\n')
-            ++count;
     }
-    return count; /* TODO */
+    lines++;
+    while (!feof(fp)) {
+        ch = fgetc(fp);
+        if (ch == '\n') {
+            lines++;
+        }
+    }
+    fclose(fp);
+    return lines;
 }
 
 char **splitLines(char *text, int lines_num) {
@@ -28,7 +32,7 @@ char **splitLines(char *text, int lines_num) {
 }
 
 LineOfCode **parseLines(char **source_lines, int lines_num) {
-    LineOfCode **lines = malloc(sizeof(void *)*lines_num);
+    LineOfCode **lines = malloc(sizeof(void *) * lines_num);
     for (int i = 0; i < lines_num; ++i) {
         lines[i] = createLine(source_lines[i]);
     }
@@ -36,9 +40,10 @@ LineOfCode **parseLines(char **source_lines, int lines_num) {
 }
 
 ParsedFile *createParsedFile(char *filename) {
-    char* text = "jmp $4"; /* read(filename, ...); */
+    FILE *fp = fopen(filename, "r");
+    char *text = "jmp $4"; /* read(filename, ...); */
     int lines_num = countLines(text);
-    char** source_lines = splitLines(text, lines_num);
+    char **source_lines = splitLines(text, lines_num);
     ParsedFile *parsed_file = malloc(sizeof(*parsed_file));
     parsed_file->lines_num = lines_num;
     parsed_file->lines = parseLines(source_lines, lines_num);

@@ -18,7 +18,8 @@ int main(int argc, char* argv[]){
 //    first_pass(file);
 //    struct LineOfCode line = *createLine(".la $2");
 //    validate_line(line);
-    split2("  MAIN:   .dh 6,7,  7 ,,, s",8);
+//    split2("  MAIN:   .dh 6,7,  7 ,   ,,, ,s",10);
+    printf("lines: %d",countLines("/Users/orenbenaltabe/CLionProjects/assembler-HW/structs/input.txt"));
 //    printf("%d\n",1<<1);
 //    char c[2];
 //    c[0] = (char)(0xabcd & 0xff);

@@ -17,6 +17,6 @@ ParsedFile* createParsedFile(char* filename);
 
 char **splitLines(char *text, int i);
 LineOfCode **parseLines(char **source_lines, int lines_num);
-int countLines(char *text);
+int countLines(char* filename);
 
 #endif
