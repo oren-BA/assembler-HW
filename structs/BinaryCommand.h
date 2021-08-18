@@ -2,7 +2,7 @@
 #define ASSEMBLER_HW_BINARYCOMMAND_H
 #include <stdio.h>
 
-enum LineType{R, I, J, D, ASCII, E, TypeError};
+enum LineType{R, I, J, D, ASCII, E, TypeError, EMPTY};
 
 typedef struct BinaryCommand BinaryCommand;
 struct  BinaryCommand{

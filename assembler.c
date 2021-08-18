@@ -259,7 +259,7 @@ int first_pass(ParsedFile *file, SymbolTable *symbol_table, unsigned int* ICF, u
 }
 
 void completeBinary(SymbolTable *pTable, LineOfCode *pCode) {
-    //move to Line.c
+    /*move to Line.c*/
 }
 
 int getLabelAtrributes(SymbolTable *pTable, char *content) {
@@ -270,7 +270,7 @@ int second_pass(ParsedFile *file, SymbolTable *symbol_table){
     int line_index;
     for (line_index = 0; line_index < file->lines_num; ++line_index) {
         LineOfCode* line = file->lines[line_index];
-        if (line->tokens[0].content[0] == '.'){
+        if (!line->is_empty_or_comment && line->tokens[0].content[0] == '.'){
             if (strcmp(line->tokens[0].content, ".entry") == 0){
                 addAttribute(symbol_table, line->tokens[1].content, ENTRY);
             }

@@ -25,7 +25,7 @@ void insertSymbol(SymbolTable* table, char* symbol, unsigned int value, int attr
         dup_symbol[strlen(dup_symbol)-1] = '\0';
     }
     if (getEntry(table, dup_symbol) != NULL){
-        //TODO add line number
+        /*TODO add line number*/
         printf("symbol \"%s\" already exists\n", dup_symbol);
         free(dup_symbol);
         return;

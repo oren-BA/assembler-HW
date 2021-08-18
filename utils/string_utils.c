@@ -47,34 +47,36 @@ char **split(char *text, int word_num, const char *delimiters, int delimiters_nu
     return words;
 }
 
-
+int isWhiteSpace(char c){
+    return c == ' ' || c == '\t';
+}
 
 int countUselessWhiteSpace(char* word){
     int count = 0;
     int in_string = FALSE;
     int i = 0;
     int has_label = FALSE;
-    while(word[i] == ' ' || word[i] == '\t'){ /*removes leading whitespaces*/
+    while(isWhiteSpace(word[i])){ /*removes leading whitespaces*/
         count++;
         i++;
     }
-    while (word[i] != ' ' && word[i] != '\t' && word[i] != '\0'){
+    while (!isWhiteSpace(word[i]) && word[i] != '\0'){
         i++;
     }
-    if (word[i] == ' ' || word[i] == '\t'){
+    if (isWhiteSpace(word[i])){
         if (word[i-1] == ':')
             has_label = TRUE;
         i++;
     }
     if (has_label){ /*handle second non-useless whitespace*/
-        while(word[i] == ' ' || word[i] == '\t'){ /*removes leading whitespaces*/
+        while(isWhiteSpace(word[i])){ /*removes leading whitespaces*/
             count++;
             i++;
         }
-        while (word[i] != ' ' && word[i] != '\t' && word[i] != '\0'){
+        while (!isWhiteSpace(word[i]) && word[i] != '\0'){
             i++;
         }
-        if (word[i] == ' ' || word[i] == '\t'){
+        if (isWhiteSpace(word[i])){
             i++;
         }
     }
@@ -86,7 +88,7 @@ int countUselessWhiteSpace(char* word){
                 in_string = TRUE;
             }
         }
-        if (!in_string && word[i] == ' '){
+        if (!in_string && isWhiteSpace(word[i])){
             count++;
         }
         i++;
@@ -95,22 +97,22 @@ int countUselessWhiteSpace(char* word){
 }
 
 char* eliminateWhiteSpace(char* word){
-    int new_word_size = strlen(word) - countUselessWhiteSpace(word) ;
+    int new_word_size = strlen(word) - countUselessWhiteSpace(word);
     char* new_word = malloc(new_word_size + 1);
     int i = 0;
     int i_new = 0;
     int in_string = FALSE;
     int has_label = FALSE;
     new_word[new_word_size] = '\0';
-    while(word[i] == ' '){
+    while(isWhiteSpace(word[i])){
         i++;
     }
-    while (word[i] != ' ' && word[i] != '\0'){
+    while (!isWhiteSpace(word[i]) && word[i] != '\0'){
         new_word[i_new] = word[i];
         i++;
         i_new++;
     }
-    if (word[i] == ' '){
+    if (isWhiteSpace(word[i])){
         new_word[i_new] = word[i];
         if (word[i-1] == ':') has_label = TRUE;
         i++;
@@ -120,12 +122,12 @@ char* eliminateWhiteSpace(char* word){
         while(word[i] == ' '){
             i++;
         }
-        while (word[i] != ' ' && word[i] != '\0'){
+        while (!isWhiteSpace(word[i]) && word[i] != '\0'){
             new_word[i_new] = word[i];
             i++;
             i_new++;
         }
-        if (word[i] == ' '){
+        if (isWhiteSpace(word[i])){
             new_word[i_new] = word[i];
             if (word[i--] == ':') has_label = TRUE;
             i++;
@@ -140,7 +142,7 @@ char* eliminateWhiteSpace(char* word){
                 in_string = TRUE;
             }
         }
-        if (!in_string && word[i] == ' '){
+        if (!in_string && isWhiteSpace(word[i])){
             i++;
         } else {
             new_word[i_new] = word[i];
@@ -159,7 +161,7 @@ char **split2(char *old_text, int word_num) {
     int word_index = 0;
     int is_string = FALSE;
     int wordLen;
-    while (text[end] != '\0') { // a  b
+    while (text[end] != '\0') {
         if (text[end] == '\"') {
             if (is_string) {
                 is_string = FALSE;
