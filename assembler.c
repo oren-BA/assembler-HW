@@ -217,6 +217,9 @@ int first_pass(ParsedFile *file, SymbolTable *symbol_table, unsigned int* ICF, u
     int line_index;
     for (line_index = 0; line_index < file->lines_num; ++line_index) {
         LineOfCode* line = file->lines[line_index];
+        if (line->is_empty_or_comment)
+            continue;
+        validate_line(*line);
         if (getLineType(line) == ASCII || getLineType(line) == D) {
             if (line->has_label) {
                 insertSymbol(symbol_table, line->label.content, DC, DATA);

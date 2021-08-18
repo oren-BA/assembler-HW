@@ -48,26 +48,27 @@ int countUselessWhiteSpace(char* word){
     int in_string = FALSE;
     int i = 0;
     int has_label = FALSE;
-    while(word[i] == ' ' || word[i] == '\0'){
+    while(word[i] == ' ' || word[i] == '\t'){ /*removes leading whitespaces*/
         count++;
         i++;
     }
-    while (word[i] != ' ' && word[i] != '\0'){
+    while (word[i] != ' ' && word[i] != '\t' && word[i] != '\0'){
         i++;
     }
-    if (word[i] == ' '){
-        if (word[i-1] == ':') has_label = TRUE;
+    if (word[i] == ' ' || word[i] == '\t'){
+        if (word[i-1] == ':')
+            has_label = TRUE;
         i++;
     }
     if (has_label){ /*handle second non-useless whitespace*/
-        while(word[i] == ' ' || word[i] == '\0'){
+        while(word[i] == ' ' || word[i] == '\t'){ /*removes leading whitespaces*/
             count++;
             i++;
         }
-        while (word[i] != ' ' && word[i] != '\0'){
+        while (word[i] != ' ' && word[i] != '\t' && word[i] != '\0'){
             i++;
         }
-        if (word[i] == ' '){
+        if (word[i] == ' ' || word[i] == '\t'){
             i++;
         }
     }
@@ -88,11 +89,13 @@ int countUselessWhiteSpace(char* word){
 }
 
 char* eliminateWhiteSpace(char* word){
-    char* new_word = malloc(strlen(word) - countUselessWhiteSpace(word));
+    int new_word_size = strlen(word) - countUselessWhiteSpace(word) ;
+    char* new_word = malloc(new_word_size + 1);
     int i = 0;
     int i_new = 0;
     int in_string = FALSE;
     int has_label = FALSE;
+    new_word[new_word_size] = '\0';
     while(word[i] == ' '){
         i++;
     }

@@ -319,19 +319,25 @@ int validate_line(LineOfCode line) {
     return !has_error; /*returns false if has_error = true*/
 }
 
-LineOfCode *createLine(char *sourceCode) {
+LineOfCode *createLine(char *sourceCode, int line_number) {
     /*TODO add line number to line_no*/
     LineOfCode *l = malloc(sizeof(*l));
-    l->source = sourceCode;
-    l->tokens_num = tokenCount(sourceCode);
-    l->has_label = FALSE;
-    l->tokens = tokenize(sourceCode, l->tokens_num);;
-    if (l->tokens[0].type == LabelDefinition) {
-        l->has_label = TRUE;
-        l->label = l->tokens[0];
-        ++l->tokens;
-        l->tokens_num--;
+    l->is_empty_or_comment = FALSE;
+    if (strlen(sourceCode) == 0 || sourceCode[0] == ';'){
+        l->is_empty_or_comment = TRUE;
+    } else { /*no tokens in empty or comment line*/
+        l->tokens_num = tokenCount(sourceCode);
+        l->tokens = tokenize(sourceCode, l->tokens_num);;
+        if (l->tokens[0].type == LabelDefinition) {
+            l->has_label = TRUE;
+            l->label = l->tokens[0];
+            ++l->tokens;
+            l->tokens_num--;
+        }
     }
+    l->source = sourceCode;
+    l->has_label = FALSE;
+    l->line_no = line_number;
     l->address = 0;
     l->binary = NULL;
     l->using_extern = FALSE;

@@ -33,8 +33,10 @@ char **splitLines(char *text, int lines_num) {
 
 LineOfCode **parseLines(char **source_lines, int lines_num) {
     LineOfCode **lines = malloc(sizeof(void *) * lines_num);
+    char* curr_line;
     for (int i = 0; i < lines_num; ++i) {
-        lines[i] = createLine(source_lines[i]);
+        curr_line = source_lines[i];
+        lines[i] = createLine(curr_line,i);
     }
     return lines;
 }
@@ -69,7 +71,7 @@ ParsedFile *createParsedFile(char *filename) {
     return parsed_file;
 }
 
-void printAddress(int address){
+void printAddress(unsigned int address){
     char str[5];
     int len;
     snprintf(str, 5, "%d", address);
@@ -78,24 +80,35 @@ void printAddress(int address){
     for (int i = 0; i < len; ++i) {
         adr[i+(4-len)] = str[i];
     }
-    printf("%s ", adr);
+    printf("%s", adr);
 }
 
-void printPayload(char* payload, int size){
+void printPayload(char* payload, unsigned int size,unsigned int byte_count,unsigned int address){
     int i;
     char* c;
     for (i = 0; i < size; ++i) {
+        if (byte_count % 4 == 0){
+            if (byte_count > 0){
+                printf("\n");
+            }
+            printAddress(address + byte_count);
+        }
+        byte_count++;
         c = payload+i;
-        printf("%x ", c[0] & 0xff);
+        printf(" %x", c[0] & 0xff);
     }
 }
 
 void printFile(ParsedFile file){
     int i;
     LineOfCode line;
+    int start_address = 100;
+    unsigned int byte_count = 0;
     for (i = 0; i < file.lines_num; ++i) {
         line = *file.lines[i];
-        printAddress(line.address);
-        printPayload(line.binary->payload, line.binary->size);
+        if (line.is_empty_or_comment)
+            continue;
+        printPayload(line.binary->payload, line.binary->size, byte_count, start_address);
+        byte_count += line.binary->size;
     }
 }
