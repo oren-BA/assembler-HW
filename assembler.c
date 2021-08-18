@@ -256,7 +256,7 @@ int second_pass(ParsedFile *file, SymbolTable *symbol_table){
         LineOfCode* line = file->lines[line_index];
         if (line->tokens[0].content[0] == '.'){
             if (strcmp(line->tokens[0].content, ".entry") == 0){
-                addAttribute(symbol_table, line->tokens[1], EXTERN);
+                addAttribute(symbol_table, line->tokens[1].content, EXTERN);
             }
             continue;
         }

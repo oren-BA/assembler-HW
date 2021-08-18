@@ -6,21 +6,25 @@ typedef struct SymbolTable SymbolTable;
 typedef struct SymbolTableEntry SymbolTableEntry;
 
 struct SymbolTable {
-    struct SymbolTableEntry * entires;
+    struct SymbolTableEntry * first;
     int entries_num;
 };
 
 struct SymbolTableEntry{
     char* symbol;
-    int value;
-    int attributes;
+    unsigned int value;
+    unsigned int attributes;
     SymbolTableEntry *next;
+    SymbolTableEntry *prev;
 };
+SymbolTableEntry* createSymbolTableEntry(char *symbol, unsigned int value, int attributes);
+void destroySymbolTableEntry(SymbolTableEntry symbolTableEntry);
+SymbolTableEntry *getEntry(SymbolTable *pTable, char *symbol);
 
 void insertSymbol(SymbolTable* table, char* symbol, unsigned int value, int attributes);
 SymbolTable* createSymbolTable();
-void destroySymbolTable(SymbolTable* table);
-void addAttribute(SymbolTable *table, struct Token token, enum SymbolAttribute attribute);
+void destroySymbolTable(SymbolTable table);
+void addAttribute(SymbolTable *table, char *symbol, enum SymbolAttribute attribute);
 
 
 #endif

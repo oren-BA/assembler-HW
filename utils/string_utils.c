@@ -15,6 +15,12 @@ int in_string(char c, const char *str, int length) {
     return FALSE;
 }
 
+char* stringDuplicate(char* str){
+    char* new_str;
+    strcpy(new_str = malloc(strlen(str) + 1), str);
+    return new_str;
+}
+
 char **split(char *text, int word_num, const char *delimiters, int delimiters_num) {
     int end = 0;
     int start = 0;
