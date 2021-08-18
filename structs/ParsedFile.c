@@ -50,7 +50,7 @@ ParsedFile *createParsedFile(char *filename) {
     FILE *f = fopen(filename, "r");
     if (f) {
         fseek(f, 0, SEEK_END);
-        length = ftell(f) - 21;
+        length = ftell(f);
         fseek(f, 0, SEEK_SET);
         buffer = malloc(length+1);
         if (buffer) {
