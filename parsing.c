@@ -12,13 +12,17 @@
 #include "utils/string_utils.h"
 
 
-int main(int argc, char* argv[]){
+int main(int argc, char *argv[]) {
 //    split2("",0);
 //    ParsedFile *file = createParsedFile("");
 //    first_pass(file);
 //    struct LineOfCode line = *createLine(".la $2");
 //    validate_line(line);
-    eliminateWhiteSpace("    a  b , s  , d, c ,\"h h        h \"    ");
+//    split2("  MAIN:   .dh 6,7,  7 ,   ,,, ,s",10);
+    ParsedFile* file = createParsedFile("/Users/orenbenaltabe/CLionProjects/assembler-HW/structs/input.txt");
+    int ICF, DCF;
+    first_pass(file, NULL, &ICF, &DCF);
+    printFile(*file);
 //    printf("%d\n",1<<1);
 //    char c[2];
 //    c[0] = (char)(0xabcd & 0xff);

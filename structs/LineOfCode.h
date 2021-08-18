@@ -15,13 +15,14 @@ struct LineOfCode {
     struct Token * tokens;
     int tokens_num;
     int using_extern;
+    int is_empty_or_comment;
 };
 
 Token* tokenize(char* sourceCode, int tokenNum);
 
 int isNumber(const char* word);
 int validate_line(LineOfCode line);
-LineOfCode *createLine(char *sourceCode);
+LineOfCode *createLine(char *sourceCode, int line_number);
 int validateRegister(char *text);
 
 

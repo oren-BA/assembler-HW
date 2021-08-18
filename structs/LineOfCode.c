@@ -24,7 +24,7 @@ char **splitLine(char *sourceCode, int wordNum) {
 }
 
 Token *tokenize(char *sourceCode, int tokenNum) {
-    char **words = splitLine(sourceCode, tokenNum);
+    char **words = split2(sourceCode, tokenNum);
     Token *tokens = (Token *) malloc(sizeof(Token) * tokenNum);
     int i;
     for (i = 0; i < tokenNum; ++i) {
@@ -147,7 +147,7 @@ int validateToken(Token t, int line_no) {
     int check = TRUE;
     if (strlen(t.content) == 0) {
         check = FALSE;
-        printf("Line %d: internal error - empty token\n", line_no);
+        printf("Line %d: empty operand\n", line_no);
     }
     if (t.type == Register) {
         check = validateRegister(t.content);
@@ -319,19 +319,27 @@ int validate_line(LineOfCode line) {
     return !has_error; /*returns false if has_error = true*/
 }
 
-LineOfCode *createLine(char *sourceCode) {
+LineOfCode *createLine(char *sourceCode, int line_number) {
     /*TODO add line number to line_no*/
     LineOfCode *l = malloc(sizeof(*l));
-    l->source = sourceCode;
-    l->tokens_num = tokenCount(sourceCode);
-    l->has_label = FALSE;
-    l->tokens = tokenize(sourceCode, l->tokens_num);;
-    if (l->tokens[0].type == LabelDefinition) {
-        l->has_label = TRUE;
-        l->label = l->tokens[0];
-        ++l->tokens;
-        l->tokens_num--;
+    l->is_empty_or_comment = FALSE;
+    char* parsedLine;
+    parsedLine = eliminateWhiteSpace(sourceCode); /* TODO need to free this*/
+    if (strlen(sourceCode) == 0 || sourceCode[0] == ';'){
+        l->is_empty_or_comment = TRUE;
+    } else { /*no tokens in empty or comment line*/
+        l->tokens_num = tokenCount(parsedLine);
+        l->tokens = tokenize(parsedLine, l->tokens_num);;
+        if (l->tokens[0].type == LabelDefinition) {
+            l->has_label = TRUE;
+            l->label = l->tokens[0];
+            ++l->tokens;
+            l->tokens_num--;
+        }
     }
+    l->source = parsedLine;
+    l->has_label = FALSE;
+    l->line_no = line_number;
     l->address = 0;
     l->binary = NULL;
     l->using_extern = FALSE;
