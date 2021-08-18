@@ -324,7 +324,13 @@ LineOfCode *createLine(char *sourceCode, int line_number) {
     LineOfCode *l = malloc(sizeof(*l));
     l->is_empty_or_comment = FALSE;
     char* parsedLine;
+    l->has_label = FALSE;
+    l->address = 0;
+    l->binary = NULL;
+    l->using_extern = FALSE;
+    l->line_no = line_number;
     parsedLine = eliminateWhiteSpace(sourceCode); /* TODO need to free this*/
+    l->source = parsedLine;
     if (strlen(sourceCode) == 0 || sourceCode[0] == ';'){
         l->is_empty_or_comment = TRUE;
     } else { /*no tokens in empty or comment line*/
@@ -337,12 +343,6 @@ LineOfCode *createLine(char *sourceCode, int line_number) {
             l->tokens_num--;
         }
     }
-    l->source = parsedLine;
-    l->has_label = FALSE;
-    l->line_no = line_number;
-    l->address = 0;
-    l->binary = NULL;
-    l->using_extern = FALSE;
     return l;
 }
 
