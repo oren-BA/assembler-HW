@@ -54,7 +54,7 @@ BinaryCommand *dataLineToBinary(LineOfCode* line) {
     int immediate_location;
     int rs_loc;
     int rt_loc;
-    int rd, rs, rt;
+    int rd = -1, rs = -1, rt = -1;
     enum LineType line_type = getLineType(line);
     int values[6];
     int sizes[6];
@@ -134,9 +134,21 @@ BinaryCommand *dataLineToBinary(LineOfCode* line) {
             sizes[3] = 5;
             sizes[4] = 5;
             sizes[5] = 6;
-            values[2] = strtol(line->tokens[3].content + 1, NULL, 10);
-            values[3] = strtol(line->tokens[2].content + 1, NULL, 10);
-            values[4] = strtol(line->tokens[1].content + 1, NULL, 10);
+            if (line->tokens_num >= 4){
+                rs = strtol(line->tokens[1].content + 1, NULL, 10);
+                rt = strtol(line->tokens[2].content + 1, NULL, 10);
+                rd = strtol(line->tokens[3].content + 1, NULL, 10);
+            } else {
+                rd = strtol(line->tokens[1].content + 1, NULL, 10);
+                rs = strtol(line->tokens[2].content + 1, NULL, 10);
+            }
+            values[2] = rd;
+            values[3] = 0;
+            if (rt != -1){ /* has rt */
+                values[3] = rt;
+            }
+            values[4] = rs;
+
         } else if (getLineType(line) == I) {
             /*TODO handle mask*/
             word_num = 4;

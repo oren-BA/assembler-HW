@@ -101,14 +101,14 @@ void printPayload(char* payload, unsigned int size,unsigned int byte_count,unsig
 
 void printFile(ParsedFile file){
     int i;
-    LineOfCode line;
+    LineOfCode* line;
     int start_address = 100;
     unsigned int byte_count = 0;
     for (i = 0; i < file.lines_num; ++i) {
-        line = *file.lines[i];
-        if (line.is_empty_or_comment)
+        line = file.lines[i];
+        if (line->is_empty_or_comment || getLineType(line) == E)
             continue;
-        printPayload(line.binary->payload, line.binary->size, byte_count, start_address);
-        byte_count += line.binary->size;
+        printPayload(line->binary->payload, line->binary->size, byte_count, start_address);
+        byte_count += line->binary->size;
     }
 }

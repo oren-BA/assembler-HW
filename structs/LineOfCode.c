@@ -323,11 +323,13 @@ LineOfCode *createLine(char *sourceCode, int line_number) {
     /*TODO add line number to line_no*/
     LineOfCode *l = malloc(sizeof(*l));
     l->is_empty_or_comment = FALSE;
+    char* parsedLine;
+    parsedLine = eliminateWhiteSpace(sourceCode); /* TODO need to free this*/
     if (strlen(sourceCode) == 0 || sourceCode[0] == ';'){
         l->is_empty_or_comment = TRUE;
     } else { /*no tokens in empty or comment line*/
-        l->tokens_num = tokenCount(sourceCode);
-        l->tokens = tokenize(sourceCode, l->tokens_num);;
+        l->tokens_num = tokenCount(parsedLine);
+        l->tokens = tokenize(parsedLine, l->tokens_num);;
         if (l->tokens[0].type == LabelDefinition) {
             l->has_label = TRUE;
             l->label = l->tokens[0];
@@ -335,7 +337,7 @@ LineOfCode *createLine(char *sourceCode, int line_number) {
             l->tokens_num--;
         }
     }
-    l->source = sourceCode;
+    l->source = parsedLine;
     l->has_label = FALSE;
     l->line_no = line_number;
     l->address = 0;
