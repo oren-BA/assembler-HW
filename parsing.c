@@ -14,7 +14,7 @@
 
 int main(int argc, char *argv[]) {
 
-    ParsedFile* file = createParsedFile("/Users/orenbenaltabe/CLionProjects/assembler-HW/structs/input.txt");
+    ParsedFile* file = createParsedFile("C:\\Users\\orenb\\CLionProjects\\assembler-HW\\structs\\input.txt");
     int ICF, DCF;
     SymbolTable * symbolTable = createSymbolTable();
     first_pass(file, symbolTable, &ICF, &DCF);

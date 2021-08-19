@@ -167,12 +167,20 @@ int validateToken(Token t, int line_no) {
 }
 
 int validateR(LineOfCode line) {
-    enum TokenType types[4] = {Command, Register, Register, Register};
-    if (line.tokens_num != 4) {
-        printf("Line %d: extraneous operand\n", line.line_no);
+    enum TokenType types1[4] = {Command, Register, Register, Register};
+    enum TokenType types2[4] = {Command, Register, Register};
+    if (line.tokens_num != 3 && line.tokens_num != 4){
+        printf("Line %d: invalid operand amount\n", line.line_no);
         return FALSE;
-    } /*checks if line has 4 tokens */
-    if (!validateTypeOrder(line.tokens, line.tokens_num, types, 4, line.line_no)) return FALSE;
+    }
+    if (line.tokens_num == 3) {
+        if (!validateTypeOrder(line.tokens, line.tokens_num, types2, 3, line.line_no))
+            return FALSE;
+    } else { /*checks if line has 4 tokens */
+        if (!validateTypeOrder(line.tokens, line.tokens_num, types1, 4, line.line_no))
+            return FALSE;
+
+    }
     return TRUE;
 }
 
