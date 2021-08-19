@@ -231,6 +231,17 @@ void updateDataSymbolsAddress(SymbolTable *table, unsigned int ICF) {
     }
 }
 
+void updateDataLinesAddress(ParsedFile *file, unsigned int ICF) {
+    LineOfCode *line;
+    int i;
+    for (i = 0; i < file->lines_num; ++i) {
+        line = file->lines[i];
+        if (getLineType(line) == D || getLineType(line) == ASCII){
+            line->address += ICF;
+        }
+    }
+}
+
 int first_pass(ParsedFile *file, SymbolTable *symbol_table, unsigned int* ICF, unsigned int* DCF) {
     unsigned int IC = 100;
     unsigned int DC = 0;
@@ -269,16 +280,7 @@ int first_pass(ParsedFile *file, SymbolTable *symbol_table, unsigned int* ICF, u
     return 0;
 }
 
-void updateDataLinesAddress(ParsedFile *file, unsigned int ICF) {
-    LineOfCode *line;
-    int i;
-    for (i = 0; i < file->lines_num; ++i) {
-        line = file->lines[i];
-        if (getLineType(line) == D){
-            line->address += ICF;
-        }
-    }
-}
+
 
 
 void completeBinary(SymbolTable *table, LineOfCode *line) {
