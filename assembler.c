@@ -65,12 +65,13 @@ BinaryCommand *dataLineToBinary(LineOfCode* line) {
                           "bgt", "lb", "sb", "lw", "sw", "lh", "sh"};
 
     if (line_type == ASCII) {
-        size = strlen(line->tokens[1].content) - 2; /* -2 to get the size without the quotes */
-        payload = malloc(size+1);
+        /* -2 to get the size without the quotes, +1 for null terminator*/
+        size = strlen(line->tokens[1].content) - 2 + 1;
+        payload = malloc(size);
         memcpy(payload, line->tokens[1].content + 1, size);
         payload[size] = '\0';
-        mask = malloc(size+1);
-        for (i = 0; i < size+1; ++i) {
+        mask = malloc(size);
+        for (i = 0; i < size; ++i) {
             mask[i] = (char) 0xff;
         }
     } else if (line_type == D) {
