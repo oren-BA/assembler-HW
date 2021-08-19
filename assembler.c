@@ -14,10 +14,10 @@
 
 
 
-void write_bit_characters(char *str_payload, int value, int size) {
+void write_bit_characters(char *str_payload, unsigned int value, int size) {
     int i;
     for (i = 0; i < size; ++i) {
-        int bit = value % 2;
+        unsigned int bit = value % 2;
         if (bit == 0)
             str_payload[-i] = '0';
         else
@@ -46,7 +46,7 @@ BinaryCommand *dataLineToBinary(LineOfCode* line) {
     char *mask = NULL;
     char *payload = NULL;
     char *data_instruction;
-    int number;
+    unsigned int number;
     int word_size = 0;
     int word_num =0;
     int i;
@@ -54,9 +54,9 @@ BinaryCommand *dataLineToBinary(LineOfCode* line) {
     int immediate_location;
     int rs_loc;
     int rt_loc;
-    int rd = -1, rs = -1, rt = -1;
+    unsigned int rd, rs, rt = 0;
     enum LineType line_type = getLineType(line);
-    int values[6];
+    unsigned int values[6];
     int sizes[6];
     BinaryCommand *binary;
     char *i_commands[] = {"addi", "subi", "andi", "ori", "nori", "bne", "beq", "blt",
@@ -80,7 +80,7 @@ BinaryCommand *dataLineToBinary(LineOfCode* line) {
         size = (line->tokens_num - 1) * word_size;
         payload = malloc(size);
         for (i = 1; i < line->tokens_num; ++i) {
-            number = strtol(line->tokens[i].content, NULL, 10);
+            number = strtoul(line->tokens[i].content, NULL, 10);
             for (j = 0; j < word_size; ++j) {
                 payload[i * word_size + j] = (char) (number >> BYTE_SIZE * j & 0xff);
             }
@@ -135,18 +135,15 @@ BinaryCommand *dataLineToBinary(LineOfCode* line) {
             sizes[4] = 5;
             sizes[5] = 6;
             if (line->tokens_num >= 4){
-                rs = strtol(line->tokens[1].content + 1, NULL, 10);
-                rt = strtol(line->tokens[2].content + 1, NULL, 10);
-                rd = strtol(line->tokens[3].content + 1, NULL, 10);
+                rs = strtoul(line->tokens[1].content + 1, NULL, 10);
+                rt = strtoul(line->tokens[2].content + 1, NULL, 10);
+                rd = strtoul(line->tokens[3].content + 1, NULL, 10);
             } else {
-                rd = strtol(line->tokens[1].content + 1, NULL, 10);
-                rs = strtol(line->tokens[2].content + 1, NULL, 10);
+                rd = strtoul(line->tokens[1].content + 1, NULL, 10);
+                rs = strtoul(line->tokens[2].content + 1, NULL, 10);
             }
             values[2] = rd;
-            values[3] = 0;
-            if (rt != -1){ /* has rt */
-                values[3] = rt;
-            }
+            values[3] = rt;
             values[4] = rs;
 
         } else if (getLineType(line) == I) {
@@ -173,9 +170,9 @@ BinaryCommand *dataLineToBinary(LineOfCode* line) {
                 mask[1] = 0;
             }
             rt_loc = (3*4)/immediate_location;
-            values[0] = strtol(line->tokens[immediate_location-1].content, NULL, 10);
-            values[1] = strtol(line->tokens[rt_loc-1].content + 1, NULL, 10);
-            values[2] = strtol(line->tokens[rs_loc].content + 1, NULL, 10);
+            values[0] = strtoul(line->tokens[immediate_location-1].content, NULL, 10);
+            values[1] = strtoul(line->tokens[rt_loc-1].content + 1, NULL, 10);
+            values[2] = strtoul(line->tokens[rs_loc].content + 1, NULL, 10);
         } else {
             /*TODO handle mask*/
             mask = malloc(size);
@@ -202,7 +199,7 @@ BinaryCommand *dataLineToBinary(LineOfCode* line) {
             values[1] = 0;
             if (line->tokens[1].type == Register){
                 values[1] = 1;
-                values[0] = strtol(line->tokens[1].content + 1, NULL, 10);
+                values[0] = strtoul(line->tokens[1].content + 1, NULL, 10);
             } else { /*handle mask*/
                 mask[3] = (char) 0xfe;
                 for (i = 0; i < 3; ++i) {
@@ -214,10 +211,11 @@ BinaryCommand *dataLineToBinary(LineOfCode* line) {
             write_bit_characters((char *) (&str_payload) + start, values[i], sizes[i]);
             start -= sizes[i];
         }
-        *(int *) payload = strtol(str_payload, NULL, 2);
+        *(unsigned int *) payload = strtoul(str_payload, NULL, 2);
     }
 
     binary = createBinary(size, payload, mask);
+    free(payload);
     return binary;
 }
 
