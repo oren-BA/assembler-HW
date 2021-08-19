@@ -12,12 +12,6 @@
 
 #define CODE_SIZE 4
 
-
-char *dataTokenToPayload(char *data_instruction, char *data_argument) {
-    if (strcmp(data_instruction, ".dw") == 0) {
-    }
-}
-
 void write_bit_characters(char *str_payload, int value, int size) {
     int i;
     for (i = 0; i < size; ++i) {
@@ -30,12 +24,18 @@ void write_bit_characters(char *str_payload, int value, int size) {
     }
 }
 
-int getImmediateLocation(char *content) {
+int isConditionalBranch(char* content){
     char *branch_commands[] = {"bne", "beq", "blt","bgt"};
     int i;
     for (i = 0; i < 4; ++i) {
-        if (strcmp(content, branch_commands[i]) == 0) return 4;
+        if (strcmp(content, branch_commands[i]) == 0) return TRUE;
     }
+    return FALSE;
+}
+
+int getImmediateLocation(char *content) {
+    if (isConditionalBranch(content))
+        return 4;
     return 3;
 }
 
@@ -49,8 +49,6 @@ BinaryCommand *dataLineToBinary(LineOfCode* line) {
     int word_num =0;
     int i;
     int j;
-    int opcode;
-    int funct;
     int immediate_location;
     int rs_loc;
     int rt_loc;
@@ -60,8 +58,6 @@ BinaryCommand *dataLineToBinary(LineOfCode* line) {
     int sizes[6];
     BinaryCommand *binary;
     char *i_commands[] = {"addi", "subi", "andi", "ori", "nori", "bne", "beq", "blt",
-                          "bgt", "lb", "sb", "lw", "sw", "lh", "sh"};
-    char *j_commands[] = {"addi", "subi", "andi", "ori", "nori", "bne", "beq", "blt",
                           "bgt", "lb", "sb", "lw", "sw", "lh", "sh"};
 
     if (line_type == ASCII) {
@@ -227,7 +223,6 @@ BinaryCommand *dataLineToBinary(LineOfCode* line) {
 int first_pass(ParsedFile *file, SymbolTable *symbol_table, unsigned int* ICF, unsigned int* DCF) {
     unsigned int IC = 100;
     unsigned int DC = 0;
-    int label_exists = FALSE;
     int line_index;
     for (line_index = 0; line_index < file->lines_num; ++line_index) {
         LineOfCode* line = file->lines[line_index];
@@ -237,9 +232,9 @@ int first_pass(ParsedFile *file, SymbolTable *symbol_table, unsigned int* ICF, u
         if (getLineType(line) == ASCII || getLineType(line) == D) {
             if (line->has_label) {
                 insertSymbol(symbol_table, line->label.content, DC, DATA);
-                label_exists = TRUE;
             }
             line->binary = dataLineToBinary(line);
+            line->address = DC;
             DC += line->binary->size;
             continue;
         } else if (getLineType(line) == E && strcmp(line->tokens[0].content, ".entry") == 0) {
@@ -252,6 +247,7 @@ int first_pass(ParsedFile *file, SymbolTable *symbol_table, unsigned int* ICF, u
                 insertSymbol(symbol_table, line->label.content, IC, CODE);
             }
             line->binary = dataLineToBinary(line);
+            line->address = IC;
             IC += 4;
         }
     }
@@ -260,12 +256,24 @@ int first_pass(ParsedFile *file, SymbolTable *symbol_table, unsigned int* ICF, u
     return 0;
 }
 
-void completeBinary(SymbolTable *pTable, LineOfCode *pCode) {
-    /*move to Line.c*/
-}
-
-int getLabelAtrributes(SymbolTable *pTable, char *content) {
-    return 0;
+void completeBinary(SymbolTable *table, LineOfCode *line) {
+    SymbolTableEntry *entry;
+    unsigned int mask, offset;
+    unsigned int value;
+    if (getLineType(line) == J && strcmp(line->tokens[0].content, "stop") != 0){
+        value = getEntry(table, line->tokens[1].content)->value;
+        mask = 0x1ffffff;
+        *(int*)line->binary->payload = (*(int*)line->binary->payload & (~mask)) || (value & mask);
+    }
+    if (getLineType(line) == I){
+        if (isConditionalBranch(line->tokens[0].content)){
+            entry = getEntry(table, line->tokens[3].content);
+            offset = entry->value - line->address;
+            mask = 0xffff;
+            *(int*)line->binary->payload = (*(int*)line->binary->payload & (~mask)) || (offset & mask);
+        }
+    }
+    /* TODO move to Line.c*/
 }
 
 int second_pass(ParsedFile *file, SymbolTable *symbol_table){
@@ -282,7 +290,7 @@ int second_pass(ParsedFile *file, SymbolTable *symbol_table){
         completeBinary(symbol_table, line);
         if (getLineType(line) == J
             && strcmp(line->tokens[0].content, "stop") != 0
-            && ((getLabelAtrributes(symbol_table, line->tokens[1].content) & EXTERN) != 0)){
+            && ((getEntry(symbol_table, line->tokens[1].content)->attributes & EXTERN) != 0)){
             /* J instruction (except stop) that uses a label attributed as external */
             line->using_extern = TRUE;
         }

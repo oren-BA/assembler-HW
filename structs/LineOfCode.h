@@ -8,7 +8,7 @@ typedef struct LineOfCode LineOfCode;
 struct LineOfCode {
     char* source;
     BinaryCommand* binary;
-    int address;
+    unsigned int address;
     int line_no;
     int has_label;
     Token label;
