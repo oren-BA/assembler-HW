@@ -356,3 +356,15 @@ LineOfCode *createLine(char *sourceCode, int line_number) {
     return l;
 }
 
+void destroyLine(LineOfCode l){
+    free(l.source);
+    int i;
+    if (l.has_label){
+        --l.tokens;
+    }
+    for (i = 0; i < l.tokens_num; ++i) {
+        destroyToken(l.tokens[i]);
+    }
+    destroyBinary(*l.binary);
+}
+

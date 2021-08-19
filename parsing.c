@@ -15,9 +15,10 @@
 int main(int argc, char *argv[]) {
 
     ParsedFile* file = createParsedFile("C:\\Users\\orenb\\CLionProjects\\assembler-HW\\structs\\input.txt");
-    int ICF, DCF;
+    unsigned int *ICF = malloc(sizeof(unsigned int));
+    unsigned int *DCF = malloc(sizeof(unsigned int));
     SymbolTable * symbolTable = createSymbolTable();
-    first_pass(file, symbolTable, &ICF, &DCF);
+    first_pass(file, symbolTable, ICF, DCF);
     second_pass(file,symbolTable);
     printFile(*file);
 
