@@ -66,10 +66,11 @@ BinaryCommand *dataLineToBinary(LineOfCode* line) {
 
     if (line_type == ASCII) {
         size = strlen(line->tokens[1].content) - 2; /* -2 to get the size without the quotes */
-        payload = malloc(size);
+        payload = malloc(size+1);
         memcpy(payload, line->tokens[1].content + 1, size);
-        mask = malloc(size);
-        for (i = 0; i < size; ++i) {
+        payload[size] = '\0';
+        mask = malloc(size+1);
+        for (i = 0; i < size+1; ++i) {
             mask[i] = (char) 0xff;
         }
     } else if (line_type == D) {
