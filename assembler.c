@@ -1,6 +1,5 @@
 #include <stdlib.h>
 #include "structs/ParsedFile.h"
-#include "structs/LineOfCode.h"
 #include "SymbolTable.h"
 
 
@@ -67,7 +66,7 @@ BinaryCommand *dataLineToBinary(LineOfCode* line) {
         size = strlen(line->tokens[1].content) - 2 + 1;
         payload = malloc(size);
         memcpy(payload, line->tokens[1].content + 1, size);
-        payload[size] = '\0';
+        payload[size-1] = '\0';
         mask = malloc(size);
         for (i = 0; i < size; ++i) {
             mask[i] = (char) 0xff;
@@ -80,9 +79,9 @@ BinaryCommand *dataLineToBinary(LineOfCode* line) {
         size = (line->tokens_num - 1) * word_size;
         payload = malloc(size);
         for (i = 1; i < line->tokens_num; ++i) {
-            number = strtoul(line->tokens[i].content, NULL, 10);
+            number = strtol(line->tokens[i].content, NULL, 10);
             for (j = 0; j < word_size; ++j) {
-                payload[i * word_size + j] = (char) (number >> BYTE_SIZE * j & 0xff);
+                payload[(i-1) * word_size + j] = (char) ((number >> (BYTE_SIZE * j)) & 0xff);
             }
         }
         mask = malloc(size);
@@ -215,7 +214,7 @@ BinaryCommand *dataLineToBinary(LineOfCode* line) {
     }
 
     binary = createBinary(size, payload, mask);
-    free(payload);
+    /* free(payload);  TODO uncomment*/
     return binary;
 }
 
@@ -292,7 +291,7 @@ void completeBinary(SymbolTable *table, LineOfCode *line) {
             return; /* no need to fix register binary*/
         value = getEntry(table, symbol)->value;
         mask = 0x1ffffff;
-        *(int*)line->binary->payload = (*(int*)line->binary->payload & (~mask)) || (value & mask);
+        *(unsigned int*)line->binary->payload = (*(unsigned int*)line->binary->payload & (~mask)) | (value & mask);
     }
     if (getLineType(line) == I){
         if (isConditionalBranch(line->tokens[0].content)){
@@ -303,7 +302,7 @@ void completeBinary(SymbolTable *table, LineOfCode *line) {
             }
             offset = entry->value - line->address;
             mask = 0xffff;
-            *(int*)line->binary->payload = (*(int*)line->binary->payload & (~mask)) || (offset & mask);
+            *(unsigned int*)line->binary->payload = (*(unsigned int*)line->binary->payload & (~mask)) | (offset & mask);
         }
     }
 }
