@@ -330,7 +330,6 @@ int validate_line(LineOfCode line) {
 }
 
 LineOfCode *createLine(char *sourceCode, int line_number) {
-    /*TODO add line number to line_no*/
     LineOfCode *l = malloc(sizeof(*l));
     l->is_empty_or_comment = FALSE;
     char* parsedLine;
