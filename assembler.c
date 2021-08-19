@@ -12,6 +12,8 @@
 
 #define CODE_SIZE 4
 
+
+
 void write_bit_characters(char *str_payload, int value, int size) {
     int i;
     for (i = 0; i < size; ++i) {
@@ -219,6 +221,15 @@ BinaryCommand *dataLineToBinary(LineOfCode* line) {
     return binary;
 }
 
+void updateDataSymbolsAddress(SymbolTable *table, unsigned int ICF) {
+    struct SymbolTableEntry *entry = table->first;
+    while (entry != NULL){
+        if ((entry->attributes & DATA) != 0){
+            entry->value += ICF;
+        }
+        entry = entry->next;
+    }
+}
 
 int first_pass(ParsedFile *file, SymbolTable *symbol_table, unsigned int* ICF, unsigned int* DCF) {
     unsigned int IC = 100;
@@ -253,15 +264,33 @@ int first_pass(ParsedFile *file, SymbolTable *symbol_table, unsigned int* ICF, u
     }
     *ICF = IC;
     *DCF = DC;
+    updateDataSymbolsAddress(symbol_table, *ICF);
+    updateDataLinesAddress(file, *ICF);
     return 0;
 }
 
+void updateDataLinesAddress(ParsedFile *file, unsigned int ICF) {
+    LineOfCode *line;
+    int i;
+    for (i = 0; i < file->lines_num; ++i) {
+        line = file->lines[i];
+        if (getLineType(line) == D){
+            line->address += ICF;
+        }
+    }
+}
+
+
 void completeBinary(SymbolTable *table, LineOfCode *line) {
     SymbolTableEntry *entry;
+    char *symbol;
     unsigned int mask, offset;
     unsigned int value;
     if (getLineType(line) == J && strcmp(line->tokens[0].content, "stop") != 0){
-        value = getEntry(table, line->tokens[1].content)->value;
+        symbol = line->tokens[1].content;
+        if (symbol[0] == '$')
+            return; /* no need to fix register binary*/
+        value = getEntry(table, symbol)->value;
         mask = 0x1ffffff;
         *(int*)line->binary->payload = (*(int*)line->binary->payload & (~mask)) || (value & mask);
     }
@@ -273,7 +302,6 @@ void completeBinary(SymbolTable *table, LineOfCode *line) {
             *(int*)line->binary->payload = (*(int*)line->binary->payload & (~mask)) || (offset & mask);
         }
     }
-    /* TODO move to Line.c*/
 }
 
 int second_pass(ParsedFile *file, SymbolTable *symbol_table){
@@ -290,6 +318,7 @@ int second_pass(ParsedFile *file, SymbolTable *symbol_table){
         completeBinary(symbol_table, line);
         if (getLineType(line) == J
             && strcmp(line->tokens[0].content, "stop") != 0
+            && line->tokens[1].content[0] != '$'
             && ((getEntry(symbol_table, line->tokens[1].content)->attributes & EXTERN) != 0)){
             /* J instruction (except stop) that uses a label attributed as external */
             line->using_extern = TRUE;
