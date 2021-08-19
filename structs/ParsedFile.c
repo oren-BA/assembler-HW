@@ -42,6 +42,29 @@ LineOfCode **parseLines(char **source_lines, int lines_num) {
     return lines;
 }
 
+void swapLines(LineOfCode* l1, LineOfCode* l2){
+    LineOfCode temp = *l1;
+    *l1 = *l2;
+    *l2 = temp;
+}
+
+void sortLines(LineOfCode** lines, int size){
+    int i, j;
+    enum LineType type1, type2;
+    for (i = 0; i < size-1; ++i) {
+        for (j = 0; j < size-i-1; ++j) {
+            if (lines[j]->address < lines[j+1]->address){
+                swapLines(lines[j], lines[j+1]);
+            }
+            /*type1 = getLineType(lines[j]);
+            type2 = getLineType(lines[j+1]);
+            if ((type1 == D || type1 == ASCII) && type2 !=D && type2 != ASCII){
+                swapLines(lines[j], lines[j+1]);
+            }*/
+        }
+    }
+}
+
 ParsedFile *createParsedFile(char *filename) {
     long length;
     char *buffer = NULL;
@@ -106,6 +129,7 @@ void printFile(ParsedFile file){
     LineOfCode* line;
     int start_address = 100;
     unsigned int byte_count = 0;
+    sortLines(file.lines,file.lines_num);
     for (i = 0; i < file.lines_num; ++i) {
         line = file.lines[i];
         if (line->is_empty_or_comment || getLineType(line) == E)
