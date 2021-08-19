@@ -1,11 +1,8 @@
 #ifndef ASSEMBLER_HW_PARSEDFILE_H
 #define ASSEMBLER_HW_PARSEDFILE_H
 
-#ifdef __APPLE__
-#include <sys/uio.h>
-#else
+
 #include <io.h>
-#endif
 #include "LineOfCode.h"
 
 typedef struct parsedFile ParsedFile;

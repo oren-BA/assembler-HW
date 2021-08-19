@@ -2,6 +2,7 @@
 #include <string.h>
 #include <stdbool.h>
 #include "Token.h"
+#include "../utils/string_utils.h"
 
 
 #define TRUE 1
@@ -58,8 +59,7 @@ int isNumber(const char* word){
 
 Token wordToToken(char* word, int position){
     Token t;
-    t.content = malloc(strlen(word));
-    strcpy(t.content, word);
+    t.content = stringDuplicate(word);
     if (strlen(word) == 0){
         t.type = Empty;
     } else if(word[0] == '$'){

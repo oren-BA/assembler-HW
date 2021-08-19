@@ -80,6 +80,8 @@ int validateLabel(char *w, int isDefinition) {
 
 enum LineType getLineType(LineOfCode* line) {
     /*TODO change default return to ERROR*/
+    if (line->is_empty_or_comment)
+        return EMPTY;
     char *cmd = line->tokens[0].content;
     int i;
     char *r_commands[] = {"add", "sub", "and", "or", "nor", "move", "mhvi", "mvlo"};

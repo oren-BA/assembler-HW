@@ -34,7 +34,8 @@ char **splitLines(char *text, int lines_num) {
 LineOfCode **parseLines(char **source_lines, int lines_num) {
     LineOfCode **lines = malloc(sizeof(void *) * lines_num);
     char* curr_line;
-    for (int i = 0; i < lines_num; ++i) {
+    int i;
+    for (i = 0; i < lines_num; ++i) {
         curr_line = source_lines[i];
         lines[i] = createLine(curr_line,i);
     }
@@ -51,15 +52,15 @@ ParsedFile *createParsedFile(char *filename) {
         fseek(f, 0, SEEK_END);
         length = ftell(f);
         fseek(f, 0, SEEK_SET);
-        buffer = malloc(length);
+        buffer = malloc(length+1);
         if (buffer) {
             fread(buffer, 1, length, f);
+            buffer[length] = '\0';
         }
         fclose(f);
     }
 
     if (buffer) {
-        // start to process your data / extract strings here...
         source_lines = splitLines(buffer, lines_num);
     } else {
         /*TODO handle error*/
@@ -74,10 +75,11 @@ ParsedFile *createParsedFile(char *filename) {
 void printAddress(unsigned int address){
     char str[5];
     int len;
+    int i;
     snprintf(str, 5, "%d", address);
     len = strlen(str);
     char adr[5] = {'0','0','0','0','\0'};
-    for (int i = 0; i < len; ++i) {
+    for ( i = 0; i < len; ++i) {
         adr[i+(4-len)] = str[i];
     }
     printf("%s", adr);
