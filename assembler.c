@@ -297,6 +297,10 @@ void completeBinary(SymbolTable *table, LineOfCode *line) {
     if (getLineType(line) == I){
         if (isConditionalBranch(line->tokens[0].content)){
             entry = getEntry(table, line->tokens[3].content);
+            if ((entry->attributes & EXTERN) != 0){
+                printf("line %d: can't use external symbol with conditional branch", line->line_no);
+                return;
+            }
             offset = entry->value - line->address;
             mask = 0xffff;
             *(int*)line->binary->payload = (*(int*)line->binary->payload & (~mask)) || (offset & mask);
