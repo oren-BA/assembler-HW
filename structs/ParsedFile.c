@@ -50,17 +50,11 @@ void swapLines(LineOfCode* l1, LineOfCode* l2){
 
 void sortLines(LineOfCode** lines, int size){
     int i, j;
-    enum LineType type1, type2;
     for (i = 0; i < size-1; ++i) {
         for (j = 0; j < size-i-1; ++j) {
-            if (lines[j]->address < lines[j+1]->address){
+            if (lines[j]->address > lines[j+1]->address){
                 swapLines(lines[j], lines[j+1]);
             }
-            /*type1 = getLineType(lines[j]);
-            type2 = getLineType(lines[j+1]);
-            if ((type1 == D || type1 == ASCII) && type2 !=D && type2 != ASCII){
-                swapLines(lines[j], lines[j+1]);
-            }*/
         }
     }
 }
