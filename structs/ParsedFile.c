@@ -37,7 +37,7 @@ LineOfCode **parseLines(char **source_lines, int lines_num) {
     int i;
     for (i = 0; i < lines_num; ++i) {
         curr_line = source_lines[i];
-        lines[i] = createLine(curr_line,i);
+        lines[i] = createLine(curr_line,i+1);
     }
     return lines;
 }
