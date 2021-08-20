@@ -9,7 +9,7 @@
 #define FALSE 0
 
 
-int isString(char* word){ /*TODO check .asciz definition*/
+int isString(char* word){
     int i;
     if (word[0] != '"'){
         return FALSE;
