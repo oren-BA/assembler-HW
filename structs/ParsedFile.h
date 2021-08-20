@@ -11,7 +11,7 @@ struct parsedFile{
     int lines_num;
 };
 ParsedFile* createParsedFile(char* filename);
-
+void printExtern(ParsedFile file);
 char **splitLines(char *text, int i);
 LineOfCode **parseLines(char **source_lines, int lines_num);
 int countLines(char* filename);

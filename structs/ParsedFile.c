@@ -68,6 +68,7 @@ ParsedFile *createParsedFile(char *filename) {
     if (f) {
         fseek(f, 0, SEEK_END);
         length = ftell(f);
+        length -= lines_num -1; /* TODO remove this patch */
         fseek(f, 0, SEEK_SET);
         buffer = malloc(length+1);
         if (buffer) {
@@ -121,6 +122,20 @@ void printPayload(char* payload, unsigned int size,unsigned int byte_count,unsig
     }
 }
 
+
+void printExtern(ParsedFile file) {
+    LineOfCode *line;
+    Token token;
+    int i;
+    for (i = 0; i < file.lines_num; ++i) {
+        line = file.lines[i];
+        if (line->using_extern){
+            token = line->tokens[line->tokens_num - 1];
+            printf("%s %d\n", token.content, line->address);
+        }
+    }
+}
+
 void printFile(ParsedFile file){
     int i;
     LineOfCode* line;
@@ -134,4 +149,6 @@ void printFile(ParsedFile file){
         printPayload(line->binary->payload, line->binary->size, byte_count, start_address);
         byte_count += line->binary->size;
     }
+    printf("\n\n");
 }
+
