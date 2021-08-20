@@ -17,6 +17,8 @@ struct SymbolTableEntry{
     SymbolTableEntry *next;
     SymbolTableEntry *prev;
 };
+
+void printEntries(SymbolTable *table);
 SymbolTableEntry* createSymbolTableEntry(char *symbol, unsigned int value, int attributes);
 void destroySymbolTableEntry(SymbolTableEntry symbolTableEntry);
 SymbolTableEntry *getEntry(SymbolTable *pTable, char *symbol);

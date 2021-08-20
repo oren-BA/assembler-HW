@@ -4,6 +4,9 @@
 #include "utils/string_utils.h"
 
 
+#define FALSE 0
+
+#define TRUE 1
 
 SymbolTableEntry* createSymbolTableEntry(char *symbol, unsigned int value, int attributes) {
     SymbolTableEntry *entry = malloc(sizeof(*entry));
@@ -80,4 +83,16 @@ SymbolTableEntry *getEntry(SymbolTable *pTable, char *symbol) {
         entry = entry->next;
     }
     return entry;
+}
+
+
+void printEntries(SymbolTable *table) {
+    SymbolTableEntry *entry = table->first;
+    while (entry != NULL){
+        if ((entry->attributes & ENTRY) != 0){
+            printf("%s %d\n", entry->symbol,entry->value);
+        }
+        entry = entry->next;
+    }
+    printf("\n");
 }
