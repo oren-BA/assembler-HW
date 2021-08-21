@@ -14,14 +14,14 @@
 
 int main(int argc, char *argv[]) {
 
-    ParsedFile* file = createParsedFile("C:\\Users\\orenb\\CLionProjects\\assembler-HW\\structs\\input.txt");
-    unsigned int *ICF = malloc(sizeof(unsigned int));
-    unsigned int *DCF = malloc(sizeof(unsigned int));
+    ParsedFile* file = createParsedFile("D:\\Repositories\\assembler-HW\\structs\\input.txt");
+    unsigned int ICF, DCF;
     SymbolTable * symbolTable = createSymbolTable();
-    first_pass(file, symbolTable, ICF, DCF);
+    first_pass(file, symbolTable, &ICF, &DCF);
     second_pass(file,symbolTable);
     printFile(*file);
-
+    printEntries(symbolTable);
+    printExtern(*file);
     return 0;
 }
 

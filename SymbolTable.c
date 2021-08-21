@@ -90,7 +90,9 @@ void printEntries(SymbolTable *table) {
     SymbolTableEntry *entry = table->first;
     while (entry != NULL){
         if ((entry->attributes & ENTRY) != 0){
-            printf("%s %d\n", entry->symbol,entry->value);
+            printf("%s ", entry->symbol);
+            printAddress(entry->value);
+            printf("\n");
         }
         entry = entry->next;
     }

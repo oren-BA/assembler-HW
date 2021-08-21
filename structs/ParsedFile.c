@@ -139,9 +139,12 @@ void printExtern(ParsedFile file) {
         line = file.lines[i];
         if (line->using_extern){
             token = line->tokens[line->tokens_num - 1];
-            printf("%s %d\n", token.content, line->address);
+            printf("%s ", token.content);
+            printAddress(line->address);
+            printf("\n");
         }
     }
+    printf("\n");
 }
 
 void printFile(ParsedFile file){
