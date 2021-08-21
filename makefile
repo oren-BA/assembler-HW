@@ -1,6 +1,6 @@
 
 assembler: BinaryCommand.o LineOfCode.o ParsedFile.o SymbolTable.o Token.o assembler.o main.o
-	gcc -g -Wall -ansi -pedanticBinaryCommand.o LineOfCode.o ParsedFile.o SymbolTable.o Token.o assembler.o main.o -o assembler
+	gcc -g -Wall -ansi -pedantic BinaryCommand.o LineOfCode.o ParsedFile.o SymbolTable.o Token.o assembler.o main.o -o assembler
 BinaryCommand.o: structs/BinaryCommand.c structs/BinaryCommand.h
 	gcc -c -Wall -ansi -pedantic structs/BinaryCommand.c -o BinaryCommand.o
 LineOfCode.o: structs/LineOfCode.c structs/LineOfCode.h
