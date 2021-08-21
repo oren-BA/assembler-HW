@@ -300,7 +300,7 @@ int completeBinary(SymbolTable *table, LineOfCode *line) {
     if (getLineType(line) == J && strcmp(line->tokens[0].content, "stop") != 0){
         symbol = line->tokens[1].content;
         if (symbol[0] == '$')
-            return EXIT_FAILURE; /* no need to fix register binary*/
+            return EXIT_SUCCESS; /* no need to fix register binary*/
         value = getEntry(table, symbol)->value;
         mask = 0x1ffffff;
         *(unsigned int*)line->binary->payload = (*(unsigned int*)line->binary->payload & (~mask)) | (value & mask);

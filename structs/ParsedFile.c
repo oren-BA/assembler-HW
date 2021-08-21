@@ -100,7 +100,7 @@ void printAddress(unsigned int address){
     char adr[5] = {'0','0','0','0','\0'};
     int len;
     int i;
-    snprintf(str, 5, "%d", address);
+    sprintf(str, "%04d", address);
     len = strlen(str);
     for ( i = 0; i < len; ++i) {
         adr[i+(4-len)] = str[i];
