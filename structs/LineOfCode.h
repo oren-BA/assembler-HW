@@ -24,6 +24,7 @@ int isNumber(const char* word);
 int validate_line(LineOfCode line);
 LineOfCode *createLine(char *sourceCode, int line_number);
 int validateRegister(char *text);
+void destroyLine(LineOfCode l);
 
 
 char** splitLine(char* sourceCode, int wordNum);

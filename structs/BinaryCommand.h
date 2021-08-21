@@ -12,5 +12,6 @@ struct  BinaryCommand{
 } ;
 
 BinaryCommand *createBinary(size_t size, char* payload, char* mask);
+void destroyBinary(BinaryCommand b);
 
 #endif /* ASSEMBLER_HW_BINARYCOMMAND_H */

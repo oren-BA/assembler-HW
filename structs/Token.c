@@ -79,3 +79,7 @@ Token wordToToken(char* word, int position){
     }
     return t;
 }
+
+void destroyToken(Token t){
+    free(t.content);
+}

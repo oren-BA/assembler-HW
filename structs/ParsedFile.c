@@ -90,6 +90,14 @@ ParsedFile *createParsedFile(char *filename) {
     return parsed_file;
 }
 
+void destroyParsedFile(ParsedFile f){
+    int i;
+    for (i= 0; i < f.lines_num; ++i) {
+        destroyLine(*f.lines[i]);
+    }
+    free(f.lines);
+}
+
 void printAddress(unsigned int address){
     char str[5];
     int len;

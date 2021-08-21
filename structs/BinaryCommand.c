@@ -10,3 +10,8 @@ BinaryCommand *createBinary(size_t size, char* payload, char* mask){
     command_ptr->size = size;
     return command_ptr;
 }
+
+void destroyBinary(BinaryCommand b){
+    free(b.payload);
+    free(b.mask);
+}

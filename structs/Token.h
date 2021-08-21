@@ -25,6 +25,7 @@ struct Token{
 Token wordToToken(char*,int);
 int isCommandWord(char* word);
 int isString(char* word);
+void destroyToken(Token t);
 
 
 
