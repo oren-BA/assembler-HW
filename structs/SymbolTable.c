@@ -5,8 +5,8 @@
 
 
 #define FALSE 0
-
 #define TRUE 1
+
 
 SymbolTableEntry* createSymbolTableEntry(char *symbol, unsigned int value, int attributes) {
     SymbolTableEntry *entry = malloc(sizeof(*entry));
@@ -22,7 +22,7 @@ void destroySymbolTableEntry(SymbolTableEntry symbolTableEntry) {
     free(symbolTableEntry.symbol);
 }
 
-void insertSymbol(SymbolTable* table, char* symbol, unsigned int value, int attributes) {
+int insertSymbol(SymbolTable* table, char* symbol, unsigned int value, int attributes) {
     SymbolTableEntry *last;
     SymbolTableEntry *entry;
     char* dup_symbol = stringDuplicate(symbol);
@@ -31,16 +31,15 @@ void insertSymbol(SymbolTable* table, char* symbol, unsigned int value, int attr
     }
     if (getEntry(table, dup_symbol) != NULL){
         /*TODO add line number*/
-        printf("symbol \"%s\" already exists\n", dup_symbol);
         free(dup_symbol);
-        return;
+        return LABEL_ALREADY_EXISTS_ERROR;
     }
     entry = createSymbolTableEntry(dup_symbol, value, attributes);
     ++table->entries_num;
     if (table->first == NULL){
         table->first = entry;
         free(dup_symbol);
-        return;
+        return EXIT_SUCCESS;
     }
     last = table->first;
     while (last->next != NULL){
@@ -49,6 +48,7 @@ void insertSymbol(SymbolTable* table, char* symbol, unsigned int value, int attr
     entry->prev=last;
     last->next = entry;
     free(dup_symbol);
+    return EXIT_SUCCESS;
 }
 
 
@@ -70,13 +70,13 @@ void destroySymbolTable(SymbolTable table) {
     }
 }
 
-void addAttribute(SymbolTable *table, char* symbol, enum SymbolAttribute attribute) {
+int addAttribute(SymbolTable *table, char* symbol, enum SymbolAttribute attribute) {
     SymbolTableEntry *entry = getEntry(table, symbol);
     if (entry == NULL){
-        printf("no such symbol: \"%s\"\n", symbol);
-        return;
+        return NO_SUCH_SYMBOL_ERROR;
     }
     entry->attributes = entry->attributes | attribute;
+    return EXIT_SUCCESS;
 }
 
 SymbolTableEntry *getEntry(SymbolTable *pTable, char *symbol) {

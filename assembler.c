@@ -241,17 +241,24 @@ void updateDataLinesAddress(ParsedFile *file, unsigned int ICF) {
 }
 
 int first_pass(ParsedFile *file, SymbolTable *symbol_table, unsigned int* ICF, unsigned int* DCF) {
+    int line_index;
     unsigned int IC = 100;
     unsigned int DC = 0;
-    int line_index;
+    int had_error = FALSE;
     for (line_index = 0; line_index < file->lines_num; ++line_index) {
         LineOfCode* line = file->lines[line_index];
         if (line->is_empty_or_comment)
             continue;
-        validate_line(*line);
+        if (!validate_line(*line)){
+            had_error = TRUE;
+            continue;
+        }
         if (getLineType(line) == ASCII || getLineType(line) == D) {
             if (line->has_label) {
-                insertSymbol(symbol_table, line->label.content, DC, DATA);
+                if (insertSymbol(symbol_table, line->label.content, DC, DATA) == LABEL_ALREADY_EXISTS_ERROR){
+                    printf("Line %d: symbol \"%s\" already exists\n", line->line_no, line->label.content);
+                    had_error = TRUE;
+                }
             }
             line->binary = dataLineToBinary(line);
             line->address = DC;
@@ -260,11 +267,18 @@ int first_pass(ParsedFile *file, SymbolTable *symbol_table, unsigned int* ICF, u
         } else if (getLineType(line) == E && strcmp(line->tokens[0].content, ".entry") == 0) {
             continue;
         } else if (getLineType(line) == E) {
-            insertSymbol(symbol_table, line->tokens[1].content, 0, EXTERN);
+            if (insertSymbol(symbol_table, line->tokens[1].content, 0, EXTERN) == LABEL_ALREADY_EXISTS_ERROR) {
+                printf("Line %d: symbol \"%s\" already exists\n", line->line_no, line->tokens[1].content);
+                had_error = TRUE;
+            }
+
             continue;
         } else { /* code line */
             if (line->has_label) {
-                insertSymbol(symbol_table, line->label.content, IC, CODE);
+                if (insertSymbol(symbol_table, line->label.content, IC, CODE) == LABEL_ALREADY_EXISTS_ERROR){
+                    printf("Line %d: symbol \"%s\" already exists\n", line->line_no, line->label.content);
+                    had_error = TRUE;
+                }
             }
             line->binary = dataLineToBinary(line);
             line->address = IC;
@@ -275,13 +289,10 @@ int first_pass(ParsedFile *file, SymbolTable *symbol_table, unsigned int* ICF, u
     *DCF = DC;
     updateDataSymbolsAddress(symbol_table, *ICF);
     updateDataLinesAddress(file, *ICF);
-    return 0;
+    return !had_error;
 }
 
-
-
-
-void completeBinary(SymbolTable *table, LineOfCode *line) {
+int completeBinary(SymbolTable *table, LineOfCode *line) {
     SymbolTableEntry *entry;
     char *symbol;
     unsigned int mask, offset;
@@ -289,7 +300,7 @@ void completeBinary(SymbolTable *table, LineOfCode *line) {
     if (getLineType(line) == J && strcmp(line->tokens[0].content, "stop") != 0){
         symbol = line->tokens[1].content;
         if (symbol[0] == '$')
-            return; /* no need to fix register binary*/
+            return EXIT_FAILURE; /* no need to fix register binary*/
         value = getEntry(table, symbol)->value;
         mask = 0x1ffffff;
         *(unsigned int*)line->binary->payload = (*(unsigned int*)line->binary->payload & (~mask)) | (value & mask);
@@ -297,29 +308,40 @@ void completeBinary(SymbolTable *table, LineOfCode *line) {
     if (getLineType(line) == I){
         if (isConditionalBranch(line->tokens[0].content)){
             entry = getEntry(table, line->tokens[3].content);
+            if (entry == NULL){
+                printf("line %d: no such symbol \"%s\"\n", line->line_no, line->tokens[3].content);
+                return EXIT_FAILURE;
+            }
             if ((entry->attributes & EXTERN) != 0){
-                printf("line %d: can't use external symbol with conditional branch", line->line_no);
-                return;
+                printf("line %d: can't use external symbol with conditional branch\n", line->line_no);
+                return EXIT_FAILURE;
             }
             offset = entry->value - line->address;
             mask = 0xffff;
             *(unsigned int*)line->binary->payload = (*(unsigned int*)line->binary->payload & (~mask)) | (offset & mask);
         }
     }
+    return EXIT_SUCCESS;
 }
 
 int second_pass(ParsedFile *file, SymbolTable *symbol_table){
     int line_index;
+    int had_error = FALSE;
     for (line_index = 0; line_index < file->lines_num; ++line_index) {
         LineOfCode* line = file->lines[line_index];
         if (!line->is_empty_or_comment && line->tokens[0].content[0] == '.'){
             if (strcmp(line->tokens[0].content, ".entry") == 0){
-                addAttribute(symbol_table, line->tokens[1].content, ENTRY);
+                if (addAttribute(symbol_table, line->tokens[1].content, ENTRY) == NO_SUCH_SYMBOL_ERROR){
+                    printf("no such symbol: \"%s\"\n", line->tokens[1].content);
+                    had_error = TRUE;
+                }
             }
             continue;
         }
         /* code line */
-        completeBinary(symbol_table, line);
+        if (completeBinary(symbol_table, line) == EXIT_FAILURE){
+            had_error = TRUE;
+        }
         if (getLineType(line) == J
             && strcmp(line->tokens[0].content, "stop") != 0
             && line->tokens[1].content[0] != '$'
@@ -328,7 +350,7 @@ int second_pass(ParsedFile *file, SymbolTable *symbol_table){
             line->using_extern = TRUE;
         }
     }
-    return 0;
+    return !had_error;
 }
 
 
