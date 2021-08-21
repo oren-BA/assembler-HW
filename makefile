@@ -1,7 +1,7 @@
 
 assembler: BinaryCommand.o LineOfCode.o ParsedFile.o SymbolTable.o Token.o assembler.o main.o
 	gcc -g -Wall -ansi -pedanticBinaryCommand.o LineOfCode.o ParsedFile.o SymbolTable.o Token.o assembler.o main.o -o assembler
-structs/BinaryCommand.o: structs/BinaryCommand.c structs/BinaryCommand.h
+BinaryCommand.o: structs/BinaryCommand.c structs/BinaryCommand.h
 	gcc -c -Wall -ansi -pedantic structs/BinaryCommand.c -o structs/BinaryCommand.o
 LineOfCode.o: LineOfCode.c LineOfCode.h
 	gcc -c -Wall -ansi -pedantic LineOfCode.c -o LineOfCode.o
