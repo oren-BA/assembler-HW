@@ -3,7 +3,7 @@
 #include "structs/SymbolTable.h"
 
 
-#define FALSE 0 /* TODO*/
+#define FALSE 0
 
 #define TRUE 1
 

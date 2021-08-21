@@ -46,12 +46,6 @@ int tokenCount(const char *sourceCode) {
     return counter + 1;
 }
 
-BinaryCommand tokensToBinary(Token *tokens) {
-    /* TODO  implement*/
-    BinaryCommand *b = (BinaryCommand *) malloc(1);
-    return *b;
-}
-
 int isDigit(char c) {
     if ((c >= '0' && c <= '9')) return TRUE;
     return FALSE;
@@ -79,7 +73,6 @@ int validateLabel(char *w, int isDefinition) {
 }
 
 enum LineType getLineType(LineOfCode* line) {
-    /*TODO change default return to ERROR*/
     int i;
     char *r_commands[] = {"add", "sub", "and", "or", "nor", "move", "mhvi", "mvlo"};
     char *i_commands[] = {"addi", "subi", "andi", "ori", "nori", "bne", "beq", "blt",
