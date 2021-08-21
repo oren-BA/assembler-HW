@@ -66,6 +66,7 @@ ParsedFile *createParsedFile(char *filename) {
     if (f) {
         fseek(f, 0, SEEK_END);
         length = ftell(f);
+        length -= lines_num -1; /* TODO remove this patch */
         fseek(f, 0, SEEK_SET);
         buffer = malloc(length+1);
         if (buffer) {
@@ -142,7 +143,7 @@ void printExtern(ParsedFile file, FILE *fp) {
             fprintf(fp, "\n");
         }
     }
-   printf("\n");
+   fprintf(fp, "\n");
 }
 
 void printFile(ParsedFile file, FILE *fp){
@@ -158,6 +159,6 @@ void printFile(ParsedFile file, FILE *fp){
         printPayload(line->binary->payload, line->binary->size, byte_count, start_address, fp);
         byte_count += line->binary->size;
     }
-    fprintf("\n");
+    fprintf(fp, "\n");
 }
 
