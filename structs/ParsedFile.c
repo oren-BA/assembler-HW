@@ -1,7 +1,4 @@
 #include "LineOfCode.h"
-#include "Token.h"
-#include "BinaryCommand.h"
-#include <stdbool.h>
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
