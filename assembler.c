@@ -42,6 +42,8 @@ int getImmediateLocation(char *content) {
 
 BinaryCommand *dataLineToBinary(LineOfCode* line) {
     unsigned int size = 0;
+    char str_payload[33];
+    int start;
     char *mask = NULL;
     char *payload = NULL;
     char *data_instruction;
@@ -90,8 +92,7 @@ BinaryCommand *dataLineToBinary(LineOfCode* line) {
         }
     } else {
         payload = malloc(CODE_SIZE);
-        char str_payload[33];
-        int start = 31;
+        start = 31;
         size = 4;
         str_payload[32] = '\0';
         if (getLineType(line) == R) {
