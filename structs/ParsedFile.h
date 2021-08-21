@@ -2,7 +2,6 @@
 #define ASSEMBLER_HW_PARSEDFILE_H
 
 
-#include <io.h>
 #include "LineOfCode.h"
 
 typedef struct parsedFile ParsedFile;
