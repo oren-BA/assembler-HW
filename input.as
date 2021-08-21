@@ -1,11 +1,11 @@
 .entry Next
 .extern wNumber
-STR: .asciz "aBcd"
+STR: .asciz 3
 MAIN: add $3,$5,$9
 LOOP: ori $9,-5,$2
 la val1
 jmp Next
-Next: move $20,$4
+Next: move $4,$20
 LIST: .db 6,-9
 bgt $4,$2,END
 la K
@@ -18,4 +18,4 @@ la wNumber
 .dh 27056
 K: .dw 31,-12
 END: stop
-.entry K 
+.entry K
