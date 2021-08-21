@@ -122,7 +122,7 @@ void printPayload(char* payload, unsigned int size,unsigned int byte_count,unsig
         }
         byte_count++;
         c = payload+i;
-        printf(" ");
+        fprintf(fp, " ");
         if ((unsigned char)c[0] < 0x10)
             fprintf(fp, "0");
         fprintf(fp, "%x", c[0] & 0xff);
