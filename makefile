@@ -11,7 +11,7 @@ SymbolTable.o: structs/SymbolTable.c structs/SymbolTable.h
 	gcc -c -Wall -ansi -pedantic structs/SymbolTable.c -o SymbolTable.o
 Token.o: structs/Token.c structs/Token.h
 	gcc -c -Wall -ansi -pedantic structs/Token.c -o Token.o
-utils/string_utils.o: utils/string_utils.c utils/string_utils.h
+string_utils.o: utils/string_utils.c utils/string_utils.h
 	gcc -c -Wall -ansi -pedantic utils/string_utils.c -o string_utils.o
 assembler.o: assembler.c assembler.h
 	gcc -c -Wall -ansi -pedantic assembler.c -o assembler.o
