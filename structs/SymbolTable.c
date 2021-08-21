@@ -1,7 +1,7 @@
-#include "structs/LineOfCode.h"
-#include "structs/ParsedFile.h"
+#include "LineOfCode.h"
+#include "ParsedFile.h"
 #include "SymbolTable.h"
-#include "utils/string_utils.h"
+#include "../utils/string_utils.h"
 
 
 #define FALSE 0
@@ -23,6 +23,8 @@ void destroySymbolTableEntry(SymbolTableEntry symbolTableEntry) {
 }
 
 void insertSymbol(SymbolTable* table, char* symbol, unsigned int value, int attributes) {
+    SymbolTableEntry *last;
+    SymbolTableEntry *entry;
     char* dup_symbol = stringDuplicate(symbol);
     if (dup_symbol[strlen(dup_symbol)-1] == ':'){
         dup_symbol[strlen(dup_symbol)-1] = '\0';
@@ -33,14 +35,14 @@ void insertSymbol(SymbolTable* table, char* symbol, unsigned int value, int attr
         free(dup_symbol);
         return;
     }
-    SymbolTableEntry *entry = createSymbolTableEntry(dup_symbol, value, attributes);
+    entry = createSymbolTableEntry(dup_symbol, value, attributes);
     ++table->entries_num;
     if (table->first == NULL){
         table->first = entry;
         free(dup_symbol);
         return;
     }
-    SymbolTableEntry *last = table->first;
+    last = table->first;
     while (last->next != NULL){
         last = last->next;
     }

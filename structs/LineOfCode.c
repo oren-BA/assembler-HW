@@ -80,9 +80,6 @@ int validateLabel(char *w, int isDefinition) {
 
 enum LineType getLineType(LineOfCode* line) {
     /*TODO change default return to ERROR*/
-    if (line->is_empty_or_comment)
-        return EMPTY;
-    char *cmd = line->tokens[0].content;
     int i;
     char *r_commands[] = {"add", "sub", "and", "or", "nor", "move", "mhvi", "mvlo"};
     char *i_commands[] = {"addi", "subi", "andi", "ori", "nori", "bne", "beq", "blt",
@@ -90,6 +87,11 @@ enum LineType getLineType(LineOfCode* line) {
     char *j_commands[] = {"jmp", "la", "call", "stop"};
     char *d_commands[] = {".db", ".dw", ".dh"};
     char *e_commands[] = {".entry", ".extern"};
+    char *cmd;
+    if (line->is_empty_or_comment)
+        return EMPTY;
+    cmd = line->tokens[0].content;
+
     if (strcmp(cmd, ".asciz") == 0) return ASCII;
     for (i = 0; i < R_COMMANDS_NUM; ++i) {
         if (strcmp(cmd, r_commands[i]) == 0) {
@@ -330,9 +332,9 @@ int validate_line(LineOfCode line) {
 }
 
 LineOfCode *createLine(char *sourceCode, int line_number) {
+    char* parsedLine;
     LineOfCode *l = malloc(sizeof(*l));
     l->is_empty_or_comment = FALSE;
-    char* parsedLine;
     l->has_label = FALSE;
     l->address = 0;
     l->binary = NULL;
@@ -356,8 +358,8 @@ LineOfCode *createLine(char *sourceCode, int line_number) {
 }
 
 void destroyLine(LineOfCode l){
-    free(l.source);
     int i;
+    free(l.source);
     if (l.has_label){
         --l.tokens;
     }

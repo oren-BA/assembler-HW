@@ -1,6 +1,6 @@
 #include <stdlib.h>
 #include "structs/ParsedFile.h"
-#include "SymbolTable.h"
+#include "structs/SymbolTable.h"
 
 
 #define FALSE 0 /* TODO*/
