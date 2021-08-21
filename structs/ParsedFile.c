@@ -66,7 +66,6 @@ ParsedFile *createParsedFile(char *filename) {
     if (f) {
         fseek(f, 0, SEEK_END);
         length = ftell(f);
-        length -= lines_num -1; /* TODO remove this patch */
         fseek(f, 0, SEEK_SET);
         buffer = malloc(length+1);
         if (buffer) {
