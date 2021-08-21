@@ -8,10 +8,9 @@ typedef struct BinaryCommand BinaryCommand;
 struct  BinaryCommand{
     unsigned int size;
     char* payload;
-    char* mask; /* indicates which bits are yet to be determined. 0 - not determined */
 } ;
 
-BinaryCommand *createBinary(size_t size, char* payload, char* mask);
+BinaryCommand *createBinary(size_t size, char* payload);
 void destroyBinary(BinaryCommand b);
 
 #endif /* ASSEMBLER_HW_BINARYCOMMAND_H */
