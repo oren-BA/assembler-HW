@@ -358,6 +358,7 @@ void destroyLine(LineOfCode l){
     for (i = 0; i < l.tokens_num; ++i) {
         destroyToken(l.tokens[i]);
     }
-    destroyBinary(*l.binary);
+    if (l.binary != NULL)
+        destroyBinary(*(l.binary));
 }
 
