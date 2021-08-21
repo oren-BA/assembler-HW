@@ -88,15 +88,15 @@ SymbolTableEntry *getEntry(SymbolTable *pTable, char *symbol) {
 }
 
 
-void printEntries(SymbolTable *table) {
+void printEntries(SymbolTable *table, FILE *fp) {
     SymbolTableEntry *entry = table->first;
     while (entry != NULL){
         if ((entry->attributes & ENTRY) != 0){
-            printf("%s ", entry->symbol);
-            printAddress(entry->value);
-            printf("\n");
+            fprintf(fp, "%s ", entry->symbol);
+            printAddress(entry->value, fp);
+            fprintf(fp, "\n");
         }
         entry = entry->next;
     }
-    printf("\n");
+    fprintf(fp, "\n");
 }

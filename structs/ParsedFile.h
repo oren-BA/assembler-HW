@@ -10,11 +10,11 @@ struct parsedFile{
     int lines_num;
 };
 ParsedFile* createParsedFile(char* filename);
-void printExtern(ParsedFile file);
+void printExtern(ParsedFile file, FILE *fp);
 char **splitLines(char *text, int i);
 LineOfCode **parseLines(char **source_lines, int lines_num);
 int countLines(char* filename);
-void printAddress(unsigned int address);
-void printFile(ParsedFile file);
+void printFile(ParsedFile file, FILE *fp);
+void printAddress(unsigned int address, FILE *fp);
 
 #endif

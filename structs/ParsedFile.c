@@ -95,7 +95,8 @@ void destroyParsedFile(ParsedFile f){
     free(f.lines);
 }
 
-void printAddress(unsigned int address){
+
+void printAddress(unsigned int address, FILE *fp) {
     char str[5];
     char adr[5] = {'0','0','0','0','\0'};
     int len;
@@ -105,30 +106,30 @@ void printAddress(unsigned int address){
     for ( i = 0; i < len; ++i) {
         adr[i+(4-len)] = str[i];
     }
-    printf("%s", adr);
+    fprintf(fp, "%s", adr);
 }
 
-void printPayload(char* payload, unsigned int size,unsigned int byte_count,unsigned int address){
+void printPayload(char* payload, unsigned int size,unsigned int byte_count,unsigned int address, FILE *fp){
     int i;
     char* c;
     for (i = 0; i < size; ++i) {
         if (byte_count % 4 == 0){
             if (byte_count > 0){
-                printf("\n");
+                fprintf(fp, "\n");
             }
-            printAddress(address + byte_count);
+            printAddress(address + byte_count, fp);
         }
         byte_count++;
         c = payload+i;
         printf(" ");
         if ((unsigned char)c[0] < 0x10)
-            printf("0");
-        printf("%x", c[0] & 0xff);
+            fprintf(fp, "0");
+        fprintf(fp, "%x", c[0] & 0xff);
     }
 }
 
 
-void printExtern(ParsedFile file) {
+void printExtern(ParsedFile file, FILE *fp) {
     LineOfCode *line;
     Token token;
     int i;
@@ -136,15 +137,15 @@ void printExtern(ParsedFile file) {
         line = file.lines[i];
         if (line->using_extern){
             token = line->tokens[line->tokens_num - 1];
-            printf("%s ", token.content);
-            printAddress(line->address);
-            printf("\n");
+            fprintf(fp,"%s ", token.content);
+            printAddress(line->address, fp);
+            fprintf(fp, "\n");
         }
     }
    printf("\n");
 }
 
-void printFile(ParsedFile file){
+void printFile(ParsedFile file, FILE *fp){
     int i;
     LineOfCode* line;
     int start_address = 100;
@@ -154,9 +155,9 @@ void printFile(ParsedFile file){
         line = file.lines[i];
         if (line->is_empty_or_comment || getLineType(line) == E)
             continue;
-        printPayload(line->binary->payload, line->binary->size, byte_count, start_address);
+        printPayload(line->binary->payload, line->binary->size, byte_count, start_address, fp);
         byte_count += line->binary->size;
     }
-    printf("\n\n");
+    fprintf("\n");
 }
 

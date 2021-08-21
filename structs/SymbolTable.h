@@ -22,7 +22,7 @@ struct SymbolTableEntry{
     SymbolTableEntry *prev;
 };
 
-void printEntries(SymbolTable *table);
+void printEntries(SymbolTable *table, FILE *fp);
 SymbolTableEntry *getEntry(SymbolTable *pTable, char *symbol);
 SymbolTableEntry* createSymbolTableEntry(char *symbol, unsigned int value, int attributes);
 void destroySymbolTableEntry(SymbolTableEntry symbolTableEntry);
