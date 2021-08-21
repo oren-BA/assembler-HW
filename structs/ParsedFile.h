@@ -16,5 +16,6 @@ LineOfCode **parseLines(char **source_lines, int lines_num);
 int countLines(char* filename);
 void printFile(ParsedFile file, FILE *fp);
 void printAddress(unsigned int address, FILE *fp);
+void destroyParsedFile(ParsedFile f);
 
 #endif

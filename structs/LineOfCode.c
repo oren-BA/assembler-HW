@@ -191,7 +191,6 @@ int isConditionBranch(const char *cmd) {
 
 
 int validateI(LineOfCode line) {
-    /*TODO*/
     Token *tokens = line.tokens;
     enum TokenType types[4] = {Command, Register, Register, Label};
     enum TokenType types2[4] = {Command, Register, Number, Register};
@@ -333,7 +332,7 @@ LineOfCode *createLine(char *sourceCode, int line_number) {
     l->binary = NULL;
     l->using_extern = FALSE;
     l->line_no = line_number;
-    parsedLine = eliminateWhiteSpace(sourceCode); /* TODO need to free this*/
+    parsedLine = eliminateWhiteSpace(sourceCode);
     l->source = parsedLine;
     if (strlen(sourceCode) == 0 || sourceCode[0] == ';'){
         l->is_empty_or_comment = TRUE;

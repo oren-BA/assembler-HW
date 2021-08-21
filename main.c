@@ -49,6 +49,12 @@ int main(int argc, char *argv[]) {
         output_file[name_size + 4] = '\0';
         fp = fopen (output_file, "w+");
         printExtern(*file, fp);
+
+        free(output_file);
+        destroySymbolTable(*symbolTable);
+        free(symbolTable);
+        destroyParsedFile(*file);
+        free(file);
     }
     return 0;
 }

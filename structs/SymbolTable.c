@@ -30,7 +30,6 @@ int insertSymbol(SymbolTable* table, char* symbol, unsigned int value, int attri
         dup_symbol[strlen(dup_symbol)-1] = '\0';
     }
     if (getEntry(table, dup_symbol) != NULL){
-        /*TODO add line number*/
         free(dup_symbol);
         return LABEL_ALREADY_EXISTS_ERROR;
     }

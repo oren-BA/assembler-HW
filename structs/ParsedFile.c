@@ -87,7 +87,8 @@ ParsedFile *createParsedFile(char *filename) {
     return parsed_file;
 }
 
-void destroyParsedFile(ParsedFile f){
+
+void destroyParsedFile(ParsedFile f) {
     int i;
     for (i= 0; i < f.lines_num; ++i) {
         destroyLine(*f.lines[i]);
