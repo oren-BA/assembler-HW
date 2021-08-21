@@ -62,6 +62,7 @@ void sortLines(LineOfCode** lines, int size){
 ParsedFile *createParsedFile(char *filename) {
     long length;
     char *buffer = NULL;
+    ParsedFile *parsed_file;
     char **source_lines = NULL;
     int lines_num = countLines(filename);
     FILE *f = fopen(filename, "r");
@@ -84,7 +85,7 @@ ParsedFile *createParsedFile(char *filename) {
         /*TODO handle error*/
     }
 
-    ParsedFile *parsed_file = malloc(sizeof(*parsed_file));
+    parsed_file = malloc(sizeof(*parsed_file));
     parsed_file->lines_num = lines_num;
     parsed_file->lines = parseLines(source_lines, lines_num);
     return parsed_file;
@@ -100,11 +101,11 @@ void destroyParsedFile(ParsedFile f){
 
 void printAddress(unsigned int address){
     char str[5];
+    char adr[5] = {'0','0','0','0','\0'};
     int len;
     int i;
     snprintf(str, 5, "%d", address);
     len = strlen(str);
-    char adr[5] = {'0','0','0','0','\0'};
     for ( i = 0; i < len; ++i) {
         adr[i+(4-len)] = str[i];
     }
@@ -144,7 +145,7 @@ void printExtern(ParsedFile file) {
             printf("\n");
         }
     }
-    printf("\n");
+   printf("\n");
 }
 
 void printFile(ParsedFile file){
